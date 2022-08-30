@@ -1,0 +1,168 @@
+.vertical{
+  margin: 0 5%;
+  position: absolute;
+  top: 40%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  width: 90%;
+}
+
+.action-menu-button {
+  font-size: 16px;
+  letter-spacing: 2px;
+  height: 50px;
+  --border-radius: 5px;
+  --background: #596bf4;
+  --color: #FFFFFF;
+}
+
+.nowrap{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.dashboard-row {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.dashboard {
+  background-color: rgba(210,210,210,255);
+  color: #8e8e8f;
+  padding: 0px; 
+  display: inline-block;
+  margin: 5px 3px 3px;
+  width: 120px;
+  border-radius: 6px;
+  border: 3px solid white;
+
+  ion-card-header {
+    background-color: rgba(210,210,210,255);
+    height: 20px;
+    padding: 0px;
+  }
+
+  ion-label {
+    font-size: 9px;
+    color: white;
+  }
+
+  p {
+    margin: 5px 0 5px 0;
+    font-size: 12px;
+    color: white;
+  }
+}
+
+.dashboard-selected {
+  background-color: rgba(230,230,230,255);
+  color: black;
+  padding: 0px; 
+  display: inline-block;
+  margin: 5px 3px 3px;
+  width: 120px;
+  border-radius: 6px;
+  border: 3px solid white;
+
+  ion-card-header {
+    background-color: black;
+    height: 20px;
+    padding: 0px;
+  }
+  ion-label {
+    font-size: 9px;
+    color: white;
+  }
+
+  p {
+    margin: 5px 0 5px 0;
+    font-size: 12px;
+    color: black;
+  }
+}
+
+ion-checkbox.checkbox-disabled {
+  opacity : 1;
+}
+
+.task-overdue {
+  color: red;
+  --color: red;
+}
+
+.task-isActive {
+  color: black;
+  --color: black;
+}
+
+.task-inActive {
+  color: #919192;
+  --color: #919192;
+  --background: #dcdcdc;
+}
+
+.iconCircle-complete{
+  margin-right: 15px; 
+  vertical-align: middle; 
+  font-size: 28px;
+  color: rgb(1, 148, 1);
+}
+
+.iconCircle {
+  margin-right: 15px; 
+  vertical-align: middle; 
+  font-size: 28px;
+  color: black;
+}
+
+.colorBackground {
+  background-color: rgb(255,235,156);
+  color: rgb(156,101,0);
+}
+
+.salesTable {
+  text-align: center;
+
+  ion-col {
+    border: black 1px solid;
+    padding: 5px;
+  }
+
+  ion-row {
+    margin: 0 10px;
+  }
+
+  .cellDisabled {
+    background-color: rgb(197, 197, 197);
+    --background : rgb(197, 197, 197);
+  }
+
+  .cellEnabled {
+    background-color: rgb(255, 255, 104);
+    --background: rgb(255, 255, 104);
+  }
+
+  .header {
+    padding: 10px;
+  }
+}
+
+.vertical2 {
+  position: absolute;
+  right: 15px;
+  top: 55%;
+  -ms-transform: translateY(-45%);
+  transform: translateY(-45%);
+}
+
+.vertical3 {
+  position: absolute;
+  right: 65px;
+  top: 55%;
+  -ms-transform: translateY(-45%);
+  transform: translateY(-45%);
+}

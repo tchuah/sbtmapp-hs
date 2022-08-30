@@ -1,0 +1,97 @@
+<ion-app style="background: url(./assets/background/fullbg1.jpg) no-repeat center/cover fixed;">
+  <ion-header class="ion-no-border">
+    <ion-toolbar class="transparent">
+      <ion-back-button mode="ios" style="color: white;" slot="start" defaultHref="/home">
+      </ion-back-button>
+        
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="transparent" style="text-align: center;">
+    <div style=" margin-top: 20px;">
+      <ion-label style="color: white; font-size: 23px;">Customer Details</ion-label>
+    </div>
+    <ion-card style="padding: 0 15px 15px; margin-top: 15px;">
+      <ion-grid class="ion-no-padding">
+        <form [formGroup]="sbtForm" class="ion-margin-top ion-text-center">
+          <ion-row class="ion-no-padding ion-align-items-center">
+            <ion-col class="ion-no-padding" size="12" size-md="8" push-md="2">
+              <div class="input-format">
+                <ion-item color="transparent" lines="none">
+                  <ion-label position="stacked">Company Number:</ion-label>
+                  <ion-input type="text" formControlName="CompanyNumber" readonly>
+                  </ion-input>
+                </ion-item>
+              </div>
+  
+              <div class="input-format">
+                <ion-item color="transparent" lines="none">
+                  <ion-label position="stacked">Company Name:</ion-label>
+                  <ion-input type="text" formControlName="CompanyName" readonly>
+                  </ion-input>
+                </ion-item>
+              </div>
+  
+              <div class="input-format" style="height: 100px;">
+                <ion-item color="transparent" lines="none">
+                  <ion-label position="stacked">Address:</ion-label>
+                  <ion-textarea type="string" formControlName="Address" [rows]="5" readonly>
+                  </ion-textarea>
+                </ion-item>
+              </div>
+  
+              <div class="input-format">
+                <ion-item color="transparent" lines="none">
+                  <ion-label position="stacked">Postcode:</ion-label>
+                  <ion-input type="text" formControlName="Postcode" readonly>
+                  </ion-input>
+                </ion-item>
+              </div>
+  
+              <div class="input-format">
+                <ion-item color="transparent" lines="none">
+                  <ion-label position="stacked">State:</ion-label>
+                  <ion-input type="text" formControlName="State" readonly>
+                  </ion-input>
+                </ion-item>
+              </div>
+            </ion-col>
+          </ion-row>
+        </form>
+      </ion-grid>
+    </ion-card>
+    <ion-card style="padding: 0 15px 15px; margin-top: 15px;">
+      <ion-grid class="ion-no-padding">
+        <form [formGroup]="sbtForm" class="ion-margin-top ion-text-center">
+          <ion-row class="ion-no-padding ion-align-items-center">
+            <ion-col class="ion-no-padding" size="12" size-md="8" push-md="2">
+              <div class="input-format">
+                <ion-item color="transparent" lines="none">
+                  <ion-label position="stacked">Contact Person:</ion-label>
+                  <ion-input type="text" formControlName="ContactPerson">
+                  </ion-input>
+                </ion-item>
+              </div>
+  
+              <div class="input-format">
+                <ion-item color="transparent" lines="none">
+                  <ion-label position="stacked">Contact Number:</ion-label>
+                  <ion-input type="text" formControlName="ContactNumber" readonly>
+                  </ion-input>
+                </ion-item>
+              </div>
+  
+              <div class="input-format">
+                <ion-item color="transparent" lines="none">
+                  <ion-label position="stacked">Email 1:</ion-label>
+                  <ion-input type="text" formControlName="Email1" readonly>
+                  </ion-input>
+                </ion-item>
+              </div>
+            </ion-col>
+          </ion-row>
+        </form>
+      </ion-grid>
+    </ion-card>
+  </ion-content>
+</ion-app>

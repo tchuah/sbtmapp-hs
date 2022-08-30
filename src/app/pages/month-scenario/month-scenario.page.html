@@ -1,0 +1,64 @@
+<ion-app style="background-color: #f3f3f3;">
+  <ion-header class="ion-no-border" style="padding: 5px 10px; background-color: #473f97;">
+    <ion-toolbar class="transparent">
+      <ion-back-button mode="ios" style="color: white;" slot="start" defaultHref="/sales-scenario">
+      </ion-back-button>
+      <ion-title style="--color: white; font-size: 14px;" mode="ios">Released Sales Aging</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="transparent">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content pullingIcon="chevron-down-circle-outline" refreshingSpinner="circles" style="color: white;"
+        [refreshingText]="'Loading' | translate">
+      </ion-refresher-content>
+    </ion-refresher>
+
+    <div style="padding: 3px 10px;">
+      <ion-card>
+        <ion-card-header style="text-align: center;">
+          Current Scenario on Released Sales
+        </ion-card-header>
+        <ion-card-content>
+          <canvas #barCanvas style="position: relative; height:30vh; width:40vw"></canvas>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <ion-card *ngFor="let data of dataJsonBranch">
+      <ion-card-header color="warning" style="padding: 3px;">
+        <ion-label>{{data.BranchName}}</ion-label>
+      </ion-card-header>
+
+      <!-- Default -->
+      <ion-grid class="no-margin-padding statusCard">
+        <ion-row class="no-margin-padding" style="text-align: center; ">
+          <ion-col style="background-color: rgba(75, 192, 192, 0.2);" (click)="util.goto('sales-scenario','branch-month', data.Branch)">
+            <ion-toolbar style="border-left: 0px; --background: rgba(75, 192, 192, 0.5);">
+              <ion-label> < 1 Month </ion-label>
+            </ion-toolbar>
+            <ion-label>{{data.BranchIn1Month}}</ion-label>
+          </ion-col>
+          <ion-col style="background-color: rgba(54, 162, 235, 0.2)" (click)="util.goto('sales-scenario','branch-month', data.Branch)">
+            <ion-toolbar style="border-left: 0px; --background: rgba(54, 162, 235, 0.5);">
+              <ion-label> 1-2 Month </ion-label>
+            </ion-toolbar>
+            <ion-label>{{data.BranchIn1to2Month}}</ion-label>
+          </ion-col>
+          <ion-col style="background-color: rgba(255, 206, 86, 0.2)" (click)="util.goto('sales-scenario','branch-month', data.Branch)">
+            <ion-toolbar style="border-left: 0px; --background: rgba(255, 206, 86,  0.5);">
+              <ion-label>2-3 Month</ion-label>
+            </ion-toolbar>
+            <ion-label>{{data.BranchIn2to3Month}}</ion-label>
+          </ion-col>
+          <ion-col style="background-color: rgba(255, 99, 132, 0.2);" (click)="util.goto('sales-scenario','branch-month', data.Branch)">
+            <ion-toolbar style="border-left: 0px; --background: rgba(255, 99, 132, 0.5);">
+              <ion-label>> 3 Month</ion-label>
+            </ion-toolbar>
+            <ion-label>{{data.BranchOver3Month}}</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+  </ion-content>
+</ion-app>

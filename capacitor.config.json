@@ -1,0 +1,6 @@
+{
+	"appId": "com.healp.appuser",
+	"appName": "Healp",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

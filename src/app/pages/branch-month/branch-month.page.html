@@ -1,0 +1,110 @@
+<ion-app style="background-color: #f3f3f3;">
+  <ion-header class="ion-no-border" style="background-color: #473f97;">
+    <ion-toolbar class="transparent">
+      <ion-back-button mode="ios" style="color: white; margin-left: 10px" slot="start" defaultHref="/branch-scenario">
+      </ion-back-button>
+      <ion-title style="color: white; font-size: 14px">Release Sales Aging (Branch)</ion-title>
+    </ion-toolbar>
+    <div *ngIf="data">
+      <ion-grid class="no-margin-padding">
+        <ion-row class="no-margin-padding" style="background-color: rgb(221, 219, 219); color:black;">
+          <ion-col size="8" style="font-size: 13px;">{{data.BranchName}}</ion-col>
+          <ion-col size="4" style="font-size: 13px; text-align: right;">
+            <ion-label>{{data.BranchTotalRelease}} Unit</ion-label><br>
+            <ion-label>Total: {{data.BranchTotalReleaseSales | number}}</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </ion-header>
+
+  <ion-content class="transparent">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content pullingIcon="chevron-down-circle-outline" refreshingSpinner="circles" style="color: white;"
+        [refreshingText]="'Loading' | translate">
+      </ion-refresher-content>
+    </ion-refresher>
+
+    <div style="padding: 3px 10px;">
+      <ion-card>
+        <ion-card-header style="text-align: center;">Current Scenario on Released Sales (Branch)</ion-card-header>
+        <ion-card-content>
+          <canvas #barCanvas style="position: relative; height:30vh; width:40vw"></canvas>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <div *ngIf="dataJson2">
+      <ion-card style="text-align: center; padding: 15px;" *ngIf="dataJson2.length === 0">
+        No Data
+      </ion-card>
+
+      <div *ngFor="let data of dataJson2">
+        <ion-card style="margin: 5px 10px 16px 10px;">
+          <ion-card-header [style.background]="colorSettings(data.MonthStatus)" style="color:black; padding: 6px 0px 6px 10px; max-height: 60px;">
+            <ion-grid class="no-margin-padding">
+              <ion-row class="no-margin-padding">
+                <ion-col class="no-margin-padding" size="7">
+                  <p class="nowrap" style="font-size: 12px; padding: 1px; margin: 0px;">{{data.CustomerName}}</p>
+                </ion-col>
+                <ion-col class="no-margin-padding" size="5">
+                  <ion-label class="vertical3" style="color: black; font-size: 15px;"
+                    (click)="util.goto('branch-month', 'progress', data.Id)">{{data.Progress}} %</ion-label>
+                  <ion-icon class="vertical2" name="information-circle-outline" style="font-size: 25px; color: black;"
+                    (click)="util.goto('branch-month', 'sales-detail', data.Id)"></ion-icon>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-header>
+
+          <div>
+            <ion-grid style="padding: 5px">
+              <ion-row>
+                <ion-col style="font-size: 12px; padding: 2px; margin: 0;">
+                  <ion-label>Quotation: </ion-label>
+                  <ion-label>{{data.Quotation}}</ion-label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col style="font-size: 12px; padding: 2px; margin: 0;">
+                  <ion-label>Make / Model: </ion-label>
+                  <ion-label>{{data.MakeName}} / {{data.ModelName}}</ion-label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col style="font-size: 12px; padding: 2px; margin: 0;">
+                  <ion-label>Chassis Number: </ion-label>
+                  <ion-label *ngIf="data.ChassisNumber">{{data.ChassisNumber}}</ion-label>
+                  <ion-label *ngIf="!data.ChassisNumber">Chassis Number Not Assigned</ion-label>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+
+          <ion-card-header [style.background]="colorSettings(data.MonthStatus)" style="color: black; padding: 5px 8px;">
+            <ion-grid class="no-margin-padding">
+              <ion-row>
+                <ion-col size="6" style="font-size: 10px; padding: 2px; margin: 0;">
+                  <ion-label>Released Date: </ion-label>
+                </ion-col>
+                <ion-col size="6" style="font-size: 10px; padding: 2px; margin: 0; text-align: left;">
+                  <ion-label>Released By: </ion-label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="6" style="font-size: 10px; padding: 2px; margin: 0;">
+                  <ion-label>{{data.ReleasedDate | date: 'dd-MM-YYYY'}} </ion-label>
+                  <ion-label [hidden]="data.DateDifference === 0">({{data.DateDifference}} days ago)</ion-label>
+                  <ion-label [hidden]="data.DateDifference !== 0">(Today)</ion-label>
+                </ion-col>
+                <ion-col size="6" style="font-size: 10px; padding: 2px; margin: 0; text-align: left;">
+                  <ion-label>{{data.ReleasedByName}}</ion-label>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-header>
+        </ion-card>
+      </div>
+    </div>
+  </ion-content>
+</ion-app>

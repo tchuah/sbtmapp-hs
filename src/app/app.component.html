@@ -1,0 +1,29 @@
+<ion-app style="--background: #1A133F;"> 
+  <ion-split-pane contentId="main-content" >
+    <ion-menu contentId="main-content" side="start" style="--background: #1A133F; --color: white">
+      <img src="./../../assets/imgs/logo/hslogo.jpg" >
+      <ion-content style="--background: #1A133F; --color: white;" class="ion-no-padding">
+        <ion-list style="--background: #1A133F; --color: white; margin: 0px; padding: 0px">
+          <ion-menu-toggle autoHide="false" *ngFor="let menu of menus; let i = index" style="--background: #1A133F; --color: white">
+            <ion-item lines="full" [routerLink]="menu.url" routerLinkActive="selected" routerDirection="root" detail="false" style="--background: #1A133F; --color: white">
+              <ion-icon slot="start" style="color: white" [name]="menu.icon + '-outline'"></ion-icon>
+              <ion-label style="--background: #1A133F; --color: white">
+                {{menu.translate | translate}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+        <ion-list lines="none" style="--background: #1A133F; --color: white; margin: 0px; padding: 0px">
+          <ion-menu-toggle autoHide="false">
+            <ion-item button (click)="logout()" detail="false" lines="none" style="--background: #1A133F; --color: white">
+              <ion-icon slot="start" name="exit-outline" style="color: white"></ion-icon>
+              <ion-label style="--background: #1A133F; --color: white">{{ 'Menu.Logout' | translate}}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+        <p style="text-align: center; position: absolute; bottom: 8px; left:0; right:0; margin-left: auto; margin-right: auto; text-align: center;">{{ global.name }}</p>
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>

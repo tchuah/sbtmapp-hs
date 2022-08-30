@@ -1,0 +1,98 @@
+<ion-app style="background: url(./assets/background/fullbg1.jpg) no-repeat center/cover fixed;">
+  <ion-header class="ion-no-border">
+    <ion-toolbar class="transparent">
+      <ion-menu-button slot="start" style="color: white;"></ion-menu-button>
+      <ion-title style="color: white; font-size: 16px;" mode="ios">New Customer</ion-title>
+      <ion-icon slot="end" name="refresh-outline" (click)="sbtForm.reset()"
+        style="margin-right: 15px; color: white; font-size: 24px;"></ion-icon>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="transparent" style="text-align: center;">
+    <ion-card class="card-standard">
+      <form [formGroup]="sbtForm" class="ion-text-center">
+        <div class="input-format">
+          <ion-item color="transparent" lines="none">
+            <ion-label position="stacked" class="required">Company Number:</ion-label>
+            <ion-input type="text" formControlName="CompanyNumber" placeholder="Ex.: 201902123456" (ionBlur)="checkExists($event);"
+              (ionChange)="toUpper('CompanyNumber',$event);">
+            </ion-input>
+          </ion-item>
+        </div>
+        <ion-item lines="none" style="text-align: center;" [hidden]="!showText">
+          <ion-label style="color: red; font-size: 12px; margin: 5px 0px;">This Company Already Registered In The
+            System.</ion-label>
+        </ion-item>
+
+        <div class="input-format">
+          <ion-item color="transparent" lines="none">
+            <ion-label position="stacked" class="required">Company Name:</ion-label>
+            <ion-input type="text" formControlName="CompanyName" (ionChange)="toUpper('CompanyName',$event);">
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-format" style="height: 80px;">
+          <ion-item color="transparent" lines="none">
+            <ion-label position="stacked" class="required">Address:</ion-label>
+            <ion-textarea type="string" formControlName="Address" (ionChange)="toUpper('Address',$event);" style="font-size: 14px;">
+            </ion-textarea>
+          </ion-item>
+        </div>
+
+        <div class="input-format">
+          <ion-item color="transparent" lines="none">
+            <ion-label position="stacked" class="required">Postcode:</ion-label>
+            <ion-input type="text" inputmode="numeric" minLength="6" maxlength="6" formControlName="Postcode">
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-format">
+          <ion-item color="transparent" lines="none">
+            <ion-label position="stacked" class="required">State:</ion-label>
+            <ion-select style="width: 100%; text-align: left;" formControlName="State">
+              <ion-select-option *ngFor="let item of global.stateDs" [value]="item.Info">
+                {{item.Info | translate}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+      </form>
+    </ion-card>
+    <ion-card class="card-standard">
+      <form [formGroup]="sbtForm" class="ion-text-center">
+        <div class="input-format">
+          <ion-item color="transparent" lines="none">
+            <ion-label position="stacked" class="required">Contact Person:</ion-label>
+            <ion-input type="text" formControlName="ContactPerson" (ionChange)="toUpper('ContactPerson',$event);">
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-format">
+          <ion-item color="transparent" lines="none">
+            <ion-label position="stacked" class="required">Contact Number:</ion-label>
+            <ion-input type="text" formControlName="ContactNumber">
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-format">
+          <ion-item color="transparent" lines="none">
+            <ion-label position="stacked">Email:</ion-label>
+            <ion-input type="text" formControlName="Email1">
+            </ion-input>
+          </ion-item>
+        </div>
+      </form>
+    </ion-card>
+  </ion-content>
+
+  <ion-footer style="margin: 0px; padding: 0px;" class="transparent ion-no-border">
+    <ion-toolbar style="margin: 0px; padding: 0px;" class="transparent ion-no-border">
+      <ion-button (click)="register();" expand="full" class="action-menu-button" [disabled]="!sbtForm.valid">
+        REGISTER
+      </ion-button>
+    </ion-toolbar>
+  </ion-footer>
+</ion-app>

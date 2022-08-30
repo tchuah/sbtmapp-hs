@@ -1,0 +1,148 @@
+.input-format {
+  background: #f3f3f3;
+  margin-top: 5px;
+  border-radius: 10px;
+  letter-spacing: 1px;
+  height: 52px;
+  color: white;
+  font-size: 14px;
+
+  ion-icon {
+    margin-left: 0px;
+    font-size: medium;
+    color: black;
+  }
+
+  ion-select {
+    font-size: 14px;
+  }
+
+  ion-input {
+    font-size: 14px;
+  }
+
+  ion-datetime {
+    font-size: 14px;
+  }
+
+  ionic-selectable {
+    font-size: 14px;
+    width: 100%;
+  }
+}
+
+.action-menu-button {
+  font-size: 16px;
+  letter-spacing: 2px;
+  height: 50px;
+  --border-radius: 5px;
+  --background: #596bf4;
+  --color: #FFFFFF;
+}
+
+.required:after {
+  content:" *";
+  color: red;
+}
+
+.vertical{
+  margin: 0 5%;
+  position: absolute;
+  top: 50%;
+  right: 0px;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.vertical2{
+  margin: 0 5%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.salesTable {
+  text-align: center;
+  
+  ion-col {
+    border: black 1px solid;
+    padding: 0px;
+  }
+
+  ion-row {
+    margin: 0 10px;
+  }
+
+  .cellDisabled {
+    background-color: rgb(197, 197, 197);
+    --background : rgb(197, 197, 197);
+    display: flex; 
+    justify-content: flex-start;
+  }
+
+  .cellEnabled {
+    background-color: rgb(255, 255, 104);
+    --background: rgb(255, 255, 104);
+    display: flex; 
+    justify-content: flex-start;
+  }
+
+  .header {
+    padding: 10px;
+  }
+
+  input {
+    background-color: transparent;
+    width: 100%;
+    outline: none;
+    border: none;
+    text-align: center !important;
+    padding: 5px;
+    margin: 0;
+  }
+}
+
+ion-item:last-child {
+  --border-width: 0 0 0 0 !important;
+}
+
+.vertical{
+  margin: 0 5%;
+  position: absolute;
+  top: 20%;
+  -ms-transform: translateY(-30%);
+  transform: translateY(-30%);
+  width: 90%;
+}
+
+.sqrResult {
+  font-size: 15px; 
+  width: 80px; 
+  padding: 3px; 
+  position: absolute;
+  top: 45%;
+  right: 10px;
+  transform: translateY(-45%);
+}
+
+.stock { 
+  ion-grid {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  
+  ion-row {
+    padding: 0px;
+    margin: 0px;
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+
+  ion-col {
+    text-align: right;
+    padding: 0px;
+    margin: 0px;
+  }
+}

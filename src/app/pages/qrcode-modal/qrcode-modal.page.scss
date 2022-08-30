@@ -1,0 +1,19 @@
+ion-content {
+  --offset-bottom: auto!important;
+  --overflow: hidden;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.action-menu-button {
+  font-size: 16px;
+  letter-spacing: 2px;
+  height: 50px;
+  --border-radius: 5px;
+  --background: #596bf4;
+  background-color: #596bf4;
+  color: #FFFFFF;
+  --color: #FFFFFF;
+}

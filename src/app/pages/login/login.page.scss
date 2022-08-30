@@ -1,0 +1,90 @@
+.input-format {
+  background: rgb(255, 255, 255, 0.3
+  );
+  border-radius: 23px;
+  margin-top: 10px;
+  letter-spacing: 1px;
+  height: 35px;
+  color: white;
+
+  ion-icon {
+      margin-left: 0px;
+      font-size: medium;
+      color: white;
+  }
+
+  ion-select {
+    color: white;
+    font-size: 14px;
+    margin-left: 10px;
+    padding: 0px;
+  }
+
+  ion-input {
+    --padding-start: 10px;
+    --padding-top: 0px;
+    --padding-bottom: 0px;
+    font-size: 14px;
+    color: white;
+  }
+
+  ion-item {
+    --min-height: 35px;
+  }
+}
+
+.error-msg {
+  color: white;
+  text-align: left;
+  font-size: 12px;
+  padding: 5px 0px 0px 20px;
+}
+
+.vertical{
+  margin: 0 5%;
+  position: absolute;
+  top: 40%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  width: 90%;
+}
+
+.title{
+  margin: 0 5%;
+  position: absolute;
+  top: 40px;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  width: 90%;
+  text-align: center; 
+  
+  ion-label {
+    color: #596bf4;
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 46px;  
+  }
+}
+
+.login{
+  margin: 0 5%;
+  position: absolute;
+  bottom: 30px;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  width: 90%;
+}
+
+.loginButton {
+  margin: 0 5%;
+  position: absolute;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  width: 90%;
+  bottom: 15px;
+  height: 35px;
+}
+
+.footer {
+  background-color: white;
+  height: 300px;
+}

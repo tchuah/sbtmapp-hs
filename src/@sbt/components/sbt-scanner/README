@@ -1,0 +1,24 @@
+SBT_SCANNER
+Author: Tommy Chuah
+Last Edited: October 29, 2021
+Version: 1.0.0
+Resources: https://github.com/zxing-js/ngx-scanner/wiki
+
+Package Needed: 
+npm i @zxing/browser@latest
+npm i @zxing/library@latest
+npm i @zxing/ngx-scanner@latest
+
+How to use:
+1) In the component's HTML file:
+    <sbt-scanner 
+        [scannerEnabled]="true" 
+        (onScanSuccess)="onScan($event)">
+    </sbt-scanner>
+    [scannerEnabled] will set the camera on and off
+    (onScanSuccess) is the function that execute after a scanning is successfully done
+
+Additional Information:
+1) The scanner format are predefined with CODE_128, CODE_39, and QR_CODE. To allow other format, override [scannerFormat] on the <sbt-scanner> DOM Element. 
+
+2) Might need to enable permission for each platform. Especially android.

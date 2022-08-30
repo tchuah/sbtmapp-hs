@@ -1,0 +1,688 @@
+<input #upload id="upload" type="file" hidden (change)="onFileChange($event)">
+<ion-app style="background-color: #f3f3f3;" [hidden]="showEdit || showAllocate">
+  <ion-header class="ion-no-border" style=" background-color: #473f97;">
+    <ion-toolbar class="transparent" style="padding: 5px 10px;">
+      <ion-back-button mode="ios" style="color: white;" slot="start" defaultHref="/sales-master2">
+      </ion-back-button>
+      <ion-title style="color: white; font-size: 16px;" mode="ios" *ngIf="dataJson">{{dataJson.Quotation}}
+      </ion-title>
+      <ion-icon name="trash-outline" slot="end" style="color: white; font-size: 25px; margin-right: 10px;"  *ngIf="dataJson"
+        (click)="cancelQuote()" [hidden]="segmentValue !== 'Quotation' || showEdit || showAllocate || dataJson.Status === 9"></ion-icon>
+      <ion-icon (click)="batchEdit()" name="create-outline" slot="end" *ngIf="dataJson"
+        [hidden]="segmentValue !== 'Vehicle' || showEdit || showAllocate || dataJson.IsVerified || dataJson.Status === 9"
+        style="color: white; font-size: 25px; margin-right: 15px;"></ion-icon>
+      <ion-icon (click)="verify()" name="checkmark-outline" slot="end" *ngIf="dataJson"
+        [hidden]="segmentValue !== 'Vehicle' || showEdit || showAllocate || dataJson.IsVerified || dataJson.Status === 9"
+        style="color: white; font-size: 28px; margin-right: 10px;"></ion-icon>
+      <ion-icon (click)="unverify()" name="checkmark-circle-outline" slot="end" *ngIf="dataJson"
+        [hidden]="segmentValue !== 'Vehicle' || showEdit || showAllocate || !dataJson.IsVerified || dataJson.Status === 9"
+        style="color: white; font-size: 25px; margin-right: 10px; color: rgb(17, 236, 17);"></ion-icon>
+    </ion-toolbar>
+
+    <ion-segment color="primary" [value]="segmentValue" style="--background:rgb(255, 255, 255, .5);"
+      [(ngModel)]="segmentValue">
+      <ion-segment-button value="Vehicle">
+        <ion-label>Vehicle</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Quotation">
+        <ion-label>Collection</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Attachment">
+        <ion-label>Attachment</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-header>
+
+  <!-- SEGMENT: Quotation -->
+  <ion-content class="transparent" [hidden]="segmentValue !== 'Quotation'">
+    <div class="Sales" style="margin: 10px;" *ngIf="dataJson">
+      <ion-grid class="no-margin-padding">
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" class="left-sales-col">Forecast Sales</ion-col>
+          <ion-col size="4" class="right-sales-col">{{dataJson.ForecastUnit}}</ion-col>
+          <ion-col size="4" class="right-sales-col">{{dataJson.ForecastSales | number}}</ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" class="left-sales-col">Release Sales</ion-col>
+          <ion-col size="4" class="right-sales-col">{{dataJson.ReleasedUnit}}</ion-col>
+          <ion-col size="4" class="right-sales-col">{{dataJson.ReleasedSales | number}}</ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" class="left-sales-col">Pending Sales</ion-col>
+          <ion-col size="4" class="right-sales-col">{{dataJson.PendingUnit}}</ion-col>
+          <ion-col size="4" class="right-sales-col">{{dataJson.PendingSales | number}}</ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" class="left-sales-col">Closed Sales</ion-col>
+          <ion-col size="4" class="right-sales-col">{{dataJson.ClosedUnit}}</ion-col>
+          <ion-col size="4" class="right-sales-col">{{dataJson.ClosedSales | number}}</ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" class="left-sales-col">Canceled Sales</ion-col>
+          <ion-col size="4" class="right-sales-col">{{dataJson.CanceledUnit}}</ion-col>
+          <ion-col size="4" class="right-sales-col">{{dataJson.CanceledSales | number}}</ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <div class="hr" style="margin: 10px 0px;"> </div>
+
+    <!-- DEPOSIT -->
+    <ion-card *ngIf="dataJson">
+      <ion-card-header style="text-align: center; background-color: rgb(206, 205, 205); color: black; padding: 5px;">
+        DEPOSIT</ion-card-header>
+      <ion-grid class="no-margin-padding">
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">To Collect</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.ForecastDeposit"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">Must Collect</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.ReleasedDeposit"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">Total Collected</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.CollectedDeposit" [readOnly]="true"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">Allocated</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.AllocatedDeposit"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">Remaining</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.RemainingDeposit"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+
+    <!-- LOAN -->
+    <ion-card *ngIf="dataJson">
+      <ion-card-header style="text-align: center; background-color: rgb(206, 205, 205); color: black; padding: 5px;">
+        LOAN</ion-card-header>
+      <ion-grid class="no-margin-padding">
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">To Collect</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.ForecastLoan"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">Must Collect</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.ReleasedLoan"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">Total Collected</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.CollectedLoan"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+
+    <!-- BALANCE -->
+    <ion-card *ngIf="dataJson">
+      <ion-card-header style="text-align: center; background-color: rgb(206, 205, 205); color: black; padding: 5px;">
+        BALANCE</ion-card-header>
+      <ion-grid class="no-margin-padding">
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">To Collect</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.ForecastBalance"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">Must Collect</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.ReleasedBalance"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">Total Collected</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.CollectedBalance" [readOnly]="true"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">Allocated</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.AllocatedBalance"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">Remaining</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.RemainingBalance"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+
+    <!-- REFUND -->
+    <ion-card *ngIf="dataJson">
+      <ion-card-header style="text-align: center; background-color: rgb(206, 205, 205); color: black; padding: 5px;">
+        REFUND</ion-card-header>
+      <ion-grid class="no-margin-padding">
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">To Collect</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.ForecastReimburse"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">Must Pay</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.ReleasedReimburse"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">Total Collected</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.PaidReimburse" [readOnly]="true"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">Allocated</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.AllocatedReimburse"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col size="4" style="margin-top: 5px;">
+            <ion-label class="card-left">Remaining</ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <input currencyMask [(ngModel)]="dataJson.RemainingReimburse"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  }" [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+  </ion-content>
+
+  <!-- SEGMENT: Vehicle -->
+  <ion-content class="transparent" [hidden]="segmentValue !== 'Vehicle'">
+    <div class="Sales" style="margin: 10px;" *ngIf="dataJson">
+      <ion-grid class="no-margin-padding">
+        <ion-row class="no-margin-padding">
+          <ion-col size="10" class="left-sales-col" style="font-size: 14px;">{{dataJson.MakeName}} /
+            {{dataJson.ModelName}}</ion-col>
+          <ion-col size="2" style="text-align: right; font-size: 14px;">{{dataJson.ForecastUnit}} Unit</ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <div class="hr" style="margin: 10px 0px;"></div>
+
+    <div *ngIf="dataSalesJson">
+      <ion-card *ngFor="let item of dataSalesJson; trackBy: trackItem">
+        <ion-card-header [ngClass]="item.CanClose ? 'required' : ''" [style.backgroundColor]="colorController(item.Status)" style="padding: 5px">
+          <ion-grid class="no-margin-padding">
+            <ion-row class="no-margin-padding">
+              <ion-col class="no-margin-padding" size="7" style="margin-top: 5px; color: black;">
+                <ion-label [hidden]="!item.ChassisNumber">{{item.ChassisNumber}}</ion-label>
+                <ion-label [hidden]="item.ChassisNumber">Chassis Number Not Assign</ion-label>
+              </ion-col>
+              <ion-col class="no-margin-padding" size="2" style=" text-align: right; margin-top: 5px;">
+                <ion-label style="color: black; font-size: 15px;"
+                (click)="util.goto('sales-potential', 'progress', item.Id)">{{item.Progress}} %</ion-label>
+              </ion-col>
+              <ion-col class="no-margin-padding" size="2"  style=" text-align: center;">
+                <ion-icon name="information-circle-outline" style="font-size: 20px; color: black;  margin-top: 5px;"
+                  (click)="util.goto('sales-potential', 'sales-detail', item.Id)"></ion-icon>
+              </ion-col>
+              <ion-col class="no-margin-padding" size="1">
+                <ion-icon [name]="(item.setOpen)? 'chevron-up-outline' : 'chevron-down-outline'"
+                style="color: black; font-size: 20px; margin-right: 5px; float: right; vertical-align: middle;  margin-top: 5px;"
+                (click)="expand(item.Id)"></ion-icon>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-header>
+
+        <div class="salesTable" [hidden]="!item.setOpen" style="padding: 5px;">
+          <ion-row class="no-margin-padding">
+            <ion-col class="borderEmpty" size="4">
+
+            </ion-col>
+            <ion-col class="header">
+              <ion-label>Amount</ion-label>
+            </ion-col>
+            <ion-col class="header">
+              <ion-label>Collected</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row class="no-margin-padding">
+            <ion-col class="header-left" size="4">
+              <ion-label>Sales</ion-label>
+            </ion-col>
+            <ion-col [ngClass]="(item.IsEdaftarComplete) ? 'cellDisabled' : 'cellEnabled'">
+              <input currencyMask [(ngModel)]="item.Sales" [placeholder]="0"
+                [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } "
+                [readOnly]="(item.IsEdaftarComplete) ? true : false" (ngModelChange)="autoCalculate('Sales',item)" />
+            </ion-col>
+            <ion-col class="cellDisabled">
+              <input currencyMask [(ngModel)]="item.SalesCollected" [placeholder]="0"
+                [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+            </ion-col>
+          </ion-row>
+          <ion-row class="no-margin-padding">
+            <ion-col class="header-left" size="4">
+              <ion-label>Deposit</ion-label>
+            </ion-col>
+            <ion-col [ngClass]="(item.IsEdaftarComplete) ? 'cellDisabled' : 'cellEnabled'">
+              <input currencyMask [(ngModel)]="item.Deposit" [placeholder]="0"
+                [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } "
+                [readOnly]="(item.IsEdaftarComplete) ? true : false" (ngModelChange)="autoCalculate('Deposit',item)" />
+            </ion-col>
+            <ion-col class="cellDisabled">
+              <input currencyMask [(ngModel)]="item.DepositCollected" [placeholder]="0"
+                [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+            </ion-col>
+          </ion-row>
+          <ion-row class="no-margin-padding">
+            <ion-col class="header-left" size="4">
+              <ion-label>Loan</ion-label>
+            </ion-col>
+            <ion-col [ngClass]="(item.IsLoan && !item.IsEdaftarComplete) ? 'cellEnabled' : 'cellDisabled'">
+              <input currencyMask [(ngModel)]="item.Loan" [placeholder]="0" (ionChange)="LoanChange(item,$event)"
+                [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } "
+                [readOnly]="!item.IsLoan || item.IsEdaftarComplete" (ngModelChange)="autoCalculate('Loan',item)"/>
+            </ion-col>
+            <ion-col class="cellDisabled">
+              <input currencyMask [(ngModel)]="item.LoanCollected" [placeholder]="0"
+                [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="no-margin-padding">
+            <ion-col class="header-left" size="4">
+              <ion-label>Balance</ion-label>
+            </ion-col>
+            <ion-col [ngClass]="(!item.IsEdaftarComplete) ? 'cellEnabled' : 'cellDisabled'">
+              <input currencyMask [(ngModel)]="item.Balance" [placeholder]="0"
+                [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } "
+                (ngModelChange)="autoCalculate('Balance',item)" [readOnly]="item.IsEdaftarComplete" />
+            </ion-col>
+            <ion-col class="cellDisabled">
+              <input currencyMask [(ngModel)]="item.BalanceCollected" [placeholder]="0"
+                [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="no-margin-padding">
+            <ion-col class="header-left" size="4">
+              <ion-label>Reimburse</ion-label>
+            </ion-col>
+            <ion-col [ngClass]="(item.IsEdaftarComplete) ? 'cellDisabled' : 'cellEnabled'">
+              <input currencyMask [(ngModel)]="item.Reimburse" [placeholder]="0"
+                [readOnly]="(item.IsEdaftarComplete) ? true : false"
+                [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } "
+                (ngModelChange)="autoCalculate('Reimburse',item)" />
+            </ion-col>
+            <ion-col class="cellDisabled">
+              <input currencyMask [(ngModel)]="item.ReimbursePaid" [placeholder]="0"
+                [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+            </ion-col>
+          </ion-row>
+          <ion-row class="no-margin-padding">
+            <ion-col class="header-left borderbottom" size="4">
+              <ion-label>Outstanding</ion-label>
+            </ion-col>
+            <ion-col class="cellDisabled borderbottom">
+              <input currencyMask [(ngModel)]="item.Outstanding" [placeholder]="0"
+                [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+            </ion-col>
+            <ion-col class="cellDisabled borderbottom">
+              <input currencyMask [(ngModel)]="item.OutstandingCollected" [placeholder]="0"
+                [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+            </ion-col>
+          </ion-row>
+          <div style="text-align: center;">
+            <ion-label style="font-size: 12px; color: red; padding: 5px;" [hidden]="!item.Outstanding">*Outstanding
+              figure has to be
+              zero</ion-label>
+          </div>
+        </div>
+
+        <ion-row class="no-margin-padding" [hidden]="!item.setOpen">
+          <ion-col size="6" class="left-sales-col">Required Loan</ion-col>
+          <ion-col size="4" class="left-sales-col">
+            <ion-checkbox [checked]="item.IsLoan" [(ngModel)]="item.IsLoan" (ionChange)="LoanChange(item, $event)"
+              style="vertical-align: middle; margin-right: 15px; opacity: 1;" [disabled]="item.IsEdaftarComplete">
+            </ion-checkbox>
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding" [hidden]="!item.setOpen">
+          <ion-col size="6" class="left-sales-col">Required Body Work</ion-col>
+          <ion-col size="4" class="left-sales-col">
+            <ion-checkbox [checked]="item.IsBodyWork" [(ngModel)]="item.IsBodyWork"
+              style="vertical-align: middle; margin-right: 15px; opacity: 1;" [disabled]="item.IsEdaftarComplete"> 
+            </ion-checkbox>
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding" [hidden]="!item.setOpen">
+          <ion-col size="6" [hidden]="!item.IsEdaftarComplete">
+            <ion-label class="card-left">Application</ion-label>
+          </ion-col>
+          <ion-col size="6" [hidden]="!item.IsEdaftarComplete">
+            <ion-label class="card-left">{{item.ApplicationName}}</ion-label>
+          </ion-col>
+          <ion-col size="4" [hidden]="item.IsEdaftarComplete">
+            <ion-label class="card-left">Application</ion-label>
+          </ion-col>
+          <ion-col size="8" [hidden]="item.IsEdaftarComplete">
+            <ionic-selectable [(ngModel)]="item.Application" [items]="bodyTypeData" itemValueField="Id"
+              itemTextField="Info" [canSearch]="true">
+            </ionic-selectable>
+          </ion-col>
+        </ion-row>
+
+        <ion-card-header style="padding: 0px; background-color: rgb(198, 195, 195);" [hidden]="dataJson.Status === 9">
+          <ion-grid class="no-margin-padding"> 
+            <ion-row class="no-margin-padding">
+              <ion-col style="text-align: center;" *ngIf="item.IsEdaftarComplete">
+                <ion-label style="color: black;" *ngIf="item.IsEdaftarComplete">
+                  E Daftar Approved
+                </ion-label>
+              </ion-col>
+              <ion-col style="text-align: center;" [hidden]="item.IsEdaftarComplete">
+                <ion-button style="text-align: center; --background: #473f97;" expand="block" (click)="indieSave(item)">
+                  <ion-icon style="margin-right: 8px; vertical-align: middle;" name="save-outline"></ion-icon> Save
+                </ion-button>
+              </ion-col>
+              <ion-col style="text-align: center;" [hidden]="!item.ChassisNumber || item.IsEdaftarComplete">
+                <ion-button style="text-align: center; --background: #473f97;" expand="block"
+                  (click)="revertCN(item)" [disabled]="!item.ChassisNumber">
+                  <i class="fa-solid fa-rotate-left" style="margin-right: 8px; vertical-align: middle;"></i> Revert
+                  Chassis No.
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-header>
+      </ion-card>
+    </div>
+  </ion-content>
+
+  <!-- SEGMENT: Attachment -->
+  <ion-content class="transparent" [hidden]="segmentValue !== 'Attachment'" *ngIf="attachmentJson">
+    <div *ngIf="attachmentJson.length === 0">
+      <ion-label class="vertical3">No Data</ion-label>
+    </div>
+
+    <div *ngIf="attachmentJson.length > 0">
+      <ion-card style="padding: 0px; margin-top: 15px; background-color: rgb(214, 213, 213);"
+        *ngFor="let img of attachmentJson; index as i; trackBy: trackItem">
+
+        <ion-toolbar style="--background: #596bf4; padding: 0px 10px;">
+          <ion-row>
+            <ion-col size="6" style="margin: 0; padding: 0%; text-align: left;">
+              <ion-label style="color: white; margin: 0; padding: 0%">
+                {{img.CreatedOn | date:'dd-MM-YYYY hh:mm a'}}</ion-label>
+            </ion-col>
+            <ion-col size="6" style="margin: 0; padding: 0%; text-align: right;">
+              <ion-label style="color: white; margin: 0; padding: 0%">
+                {{img.CreatedBy}}</ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-toolbar>
+        <div>
+          <ion-button color="danger" style="max-width: 50px; position: absolute; right: 10px;" [hidden]="IsVerified || dataJson.Status === 9"
+            (click)="deleteImage(img.Id)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+          <div *ngIf="extensionJson[i] === 'Image'">
+            <ion-img ionImgViewer style="object-fit: contain; width: 100%; max-height: 180px; height: 180px;"
+              [src]="img.Path + sas" [alt]="img.Info"></ion-img>
+          </div>
+
+          <div *ngIf="extensionJson[i] === 'docs'" style=" text-align: right;">
+            <ion-button color="danger" style="max-width: 50px; margin-right: 15px;" (click)="deleteImage(img.Id)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+            <a [href]="img.Path + sas" target="_blank">
+              <ion-button expand="full" class="action-menu-button" *ngIf="extensionJson[i] === 'docs'"
+                style="margin: 15px;">
+                <ion-icon name="cloud-download-outline" style="margin-right: 15px;"></ion-icon>Download File
+              </ion-button>
+            </a>
+          </div>
+        </div>
+        <ion-card-header style="--background: #595959; color: white; text-align: left; padding: 2px;">
+          <ion-input type="string" auto-grow="true" [(ngModel)]="list[i]" [rows]="1" style="padding: 3px;"
+            readOnly="true">
+          </ion-input>
+        </ion-card-header>
+      </ion-card>
+    </div>
+  </ion-content>
+</ion-app>
+
+<!-- Batch Edit -->
+<ion-app style="background-color: white;" [hidden]="!showEdit">
+  <ion-header class="ion-no-border" style="background-color: #473f97;">
+    <ion-toolbar class="transparent" style="padding: 5px 2px 5px 5px;">
+
+      <ion-label (click)="cancel()">
+        <ion-icon style="color: white; font-size: 28px; vertical-align: middle;" name="chevron-back-outline"></ion-icon>
+        <ion-label style="color: white; font-size: 17px; vertical-align: middle;">Back</ion-label>
+      </ion-label>
+
+      <ion-title style="color: white; font-size: 18px;" mode="ios" *ngIf="dataJson">
+        Batch Editor
+      </ion-title>
+      <ion-icon style="font-size: 28px; color: white; padding-right: 10px;" slot="end" name="save-outline"
+        (click)="batchSave()"></ion-icon>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="transparent">
+    <ion-grid class="no-margin-padding">
+      <div class="salesTable" style="padding: 5px;">
+        <ion-row class="no-margin-padding">
+          <ion-col class="borderEmpty" size="4">
+
+          </ion-col>
+          <ion-col class="header">
+            <ion-label>Amount</ion-label>
+          </ion-col>
+          <ion-col class="header">
+            <ion-label>Collected</ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col class="header-left" size="4">
+            <ion-label>Sales</ion-label>
+          </ion-col>
+          <ion-col class="cellEnabled">
+            <input currencyMask [(ngModel)]="batchData.Sales" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } "
+              (ngModelChange)="autoCalculate('Sales','')" />
+          </ion-col>
+          <ion-col class="cellDisabled">
+            <input currencyMask [(ngModel)]="batchData.SalesCollected" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col class="header-left" size="4">
+            <ion-label>Deposit</ion-label>
+          </ion-col>
+          <ion-col class="cellEnabled">
+            <input currencyMask [(ngModel)]="batchData.Deposit" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } "
+              (ngModelChange)="autoCalculate('Deposit','')" />
+          </ion-col>
+          <ion-col class="cellDisabled">
+            <input currencyMask [(ngModel)]="batchData.DepositCollected" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col class="header-left" size="4">
+            <ion-label>Loan</ion-label>
+          </ion-col>
+          <ion-col [ngClass]="(batchData.IsLoan) ? 'cellEnabled' : 'cellDisabled'">
+            <input currencyMask [(ngModel)]="batchData.Loan" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } "
+              (ngModelChange)="autoCalculate('Loan','')" [readOnly]="!batchData.IsLoan" />
+          </ion-col>
+          <ion-col class="cellDisabled">
+            <input currencyMask [(ngModel)]="batchData.LoanCollected" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="no-margin-padding">
+          <ion-col class="header-left" size="4">
+            <ion-label>Balance</ion-label>
+          </ion-col>
+          <ion-col class="cellEnabled">
+            <input currencyMask [(ngModel)]="batchData.Balance" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } "
+              (ngModelChange)="autoCalculate('Balance','')" />
+          </ion-col>
+          <ion-col class="cellDisabled">
+            <input currencyMask [(ngModel)]="batchData.BalanceCollected" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="no-margin-padding">
+          <ion-col class="header-left" size="4">
+            <ion-label>Reimburse</ion-label>
+          </ion-col>
+          <ion-col class="cellEnabled">
+            <input currencyMask [(ngModel)]="batchData.Reimburse" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } "
+              (ngModelChange)="autoCalculate('Reimburse','')" />
+          </ion-col>
+          <ion-col class="cellDisabled">
+            <input currencyMask [(ngModel)]="batchData.ReimbursePaid" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col class="header-left borderbottom" size="4">
+            <ion-label>Outstanding</ion-label>
+          </ion-col>
+          <ion-col class="cellDisabled borderbottom">
+            <input currencyMask [(ngModel)]="batchData.Outstanding" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+          </ion-col>
+          <ion-col class="cellDisabled borderbottom">
+            <input currencyMask [(ngModel)]="batchData.OutstandingCollected" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <div style="text-align: center;">
+          <ion-label style="font-size: 12px; color: red; padding: 5px; text-align: center;"
+            [hidden]="!batchData.Outstanding">*Outstanding figure has to be
+            zero</ion-label>
+        </div>
+      </div>
+
+      <ion-row class="ion-align-items-center ion-no-padding">
+
+        <ion-col class="ion-no-padding" size="6" style="margin: 0 auto;">
+          <ion-card style="margin: 10px auto; width: 90%;">
+            <ion-toolbar class="transparent" style="background-color: #473f97;">
+              <ion-item color="transparent" lines="none">
+                <ion-checkbox checked="batchData.IsLoan" [(ngModel)]="batchData.IsLoan"
+                  (ionChange)="LoanChangeBatch($event)" style="vertical-align: middle; margin-right: 15px; opacity: 1;">
+                </ion-checkbox>
+                <ion-label style="color: white; opacity: 1;">Required Loan</ion-label>
+              </ion-item>
+            </ion-toolbar>
+          </ion-card>
+        </ion-col>
+
+        <ion-col class="ion-no-padding" size="6" style="margin: 0 auto;">
+          <ion-card style="margin: 10px auto; width: 90%;">
+            <ion-toolbar class="transparent" style="background-color: #473f97;">
+              <ion-item color="transparent" lines="none">
+                <ion-checkbox checked="batchData.IsBodyWork" [(ngModel)]="batchData.IsBodyWork"
+                  style="vertical-align: middle; margin-right: 15px; opacity: 1;">
+                </ion-checkbox>
+                <ion-label style="color: white; opacity: 1;">Required Body Work</ion-label>
+              </ion-item>
+            </ion-toolbar>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+      <ion-row class="no-margin-padding">
+        <ion-col size="4" style="margin-top: 5px;">
+          <ion-label class="card-left">Application</ion-label>
+        </ion-col>
+        <ion-col size="8">
+          <ionic-selectable class="ion-text-wrap" [(ngModel)]="batchData.ApplicationTemp" [items]="bodyTypeData"
+            itemValueField="Id" itemTextField="Info" [canSearch]="true">
+          </ionic-selectable>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
+</ion-app>

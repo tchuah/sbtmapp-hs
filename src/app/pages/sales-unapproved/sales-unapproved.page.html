@@ -1,0 +1,374 @@
+<ion-app style="background-color: #f3f3f3;" [hidden]="showImage">
+  <ion-header class="ion-no-border" style="padding: 5px 10px; background-color: #473f97;">
+    <ion-toolbar class="transparent">
+      <ion-menu-button slot="start" style="color: white;" [hidden]="showSales"></ion-menu-button>
+      <ion-back-button mode="ios" style="color: white;" slot="start" defaultHref="/sales-unapproved"
+        [hidden]="!showSales" (click)="back()">
+      </ion-back-button>
+      <ion-title style="color: white; font-size: 16px;" mode="ios">Sales Monitoring</ion-title>
+      <ion-label slot="end" style="border: white 2px solid; color: white; padding: 3px; font-size: 14px;"
+        [hidden]="!isVerified || !showSales"> VERIFIED </ion-label>
+    </ion-toolbar>
+
+    <div class="input-format" style="background: white; height: 35px; margin-bottom: 15px;" [hidden]="showSales">
+      <ion-item class="transparent" lines="none">
+        <ion-input type="text" (ionChange)="onEnterChange($event)" style="margin-bottom: 12px;"
+          placeholder="Search keyword here ..."></ion-input>
+        <ion-icon name="search-outline" style="font-size: 20px; margin-bottom: 12px;" (click)="search()">
+        </ion-icon>
+      </ion-item>
+    </div>
+  </ion-header>
+
+  <ion-content class="transparent" [hidden]="showSales">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content pullingIcon="chevron-down-circle-outline" refreshingSpinner="circles" style="color: white;"
+        [refreshingText]="'Loading' | translate">
+      </ion-refresher-content>
+    </ion-refresher>
+    <ion-label class="vertical2" style="font-size: 16px; color: black; margin: 0%;" *ngIf="!noData">
+      No Data
+    </ion-label>
+    <ion-card *ngFor="let item of dataJson" (click)="selectSales(item.Id)">
+      <ion-card-header color="warning" style="margin: 0px; padding: 5px;" class="transparent ion-no-border">
+        <ion-label style="vertical-align: middle; padding-left: 5px;">{{item.Quotation}}</ion-label>
+        <ion-label [hidden]="!item.IsVerified" style="vertical-align: middle; float:right; padding-right: 5px;">VERIFIED
+        </ion-label>
+      </ion-card-header>
+      <ion-grid style="padding: 5px">
+        <ion-row>
+          <ion-col size="4" style="padding: 2px; margin: 0;">CUSTOMER</ion-col>
+          <ion-col size="1" style="padding: 2px; margin: 0;">:</ion-col>
+          <ion-col size="6" style="padding: 2px; margin: 0;">{{item.CustomerName}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" style="padding: 2px; margin: 0;">MAKE / MODEL</ion-col>
+          <ion-col size="1" style="padding: 2px; margin: 0;">:</ion-col>
+          <ion-col size="6" style="padding: 2px; margin: 0;">{{item.Make}} / {{item.Model}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" style="padding: 2px; margin: 0;">BRANCH</ion-col>
+          <ion-col size="1" style="padding: 2px; margin: 0;">:</ion-col>
+          <ion-col size="6" style="padding: 2px; margin: 0;">{{item.BranchName}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" style="padding: 2px; margin: 0;">DATE</ion-col>
+          <ion-col size="1" style="padding: 2px; margin: 0;">:</ion-col>
+          <ion-col size="6" style="padding: 2px; margin: 0;">{{item.Date}}</ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+
+    <ion-infinite-scroll (ionInfinite)="infiniteLoad($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </ion-content>
+
+  <ion-content class="transparent" [formGroup]="sbtForm" style="text-align: center; margin-top: 25px;"
+    *ngIf="showSales && selectedSales">
+    <ion-card class="card-standard">
+      <ion-grid class="ion-no-padding">
+        <ion-row class="ion-align-items-center ion-no-padding">
+          <ion-col class="ion-no-padding" size="12" size-md="8" push-md="2">
+
+            <!-- Branch -->
+            <div class="input-format">
+              <ion-item color="transparent" lines="none">
+                <ion-label position="stacked">Branch:</ion-label>
+                <ion-input type="text" formControlName="BranchName" readOnly="true"></ion-input>
+              </ion-item>
+            </div>
+
+            <!-- Sales Person -->
+            <div class="input-format">
+              <ion-item color="transparent" lines="none">
+                <ion-label position="stacked">Sales Person:</ion-label>
+                <ion-input type="text" formControlName="SalesPersonName" readOnly="true"></ion-input>
+              </ion-item>
+            </div>
+
+            <!-- Date -->
+            <div class="input-format">
+              <ion-item color="transparent" lines="none">
+                <ion-label position="stacked">Date:</ion-label>
+                <ion-input type="text" formControlName="Date" readOnly="true"></ion-input>
+              </ion-item>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+
+    <ion-card class="card-standard">
+      <ion-grid class="ion-no-padding">
+        <ion-row class="ion-align-items-center ion-no-padding">
+          <ion-col class="ion-no-padding" size="12" size-md="8" push-md="2">
+            <!-- Customer -->
+            <div class="input-format">
+              <ion-item color="transparent" lines="none">
+                <ion-label position="stacked">Customer Number:</ion-label>
+                <ion-input type="text" formControlName="Customer" (ionChange)="toUpper($event)" readOnly="true">
+                </ion-input>
+              </ion-item>
+            </div>
+
+            <div class="input-format">
+              <ion-item color="transparent" lines="none">
+                <ion-label position="stacked">Company Name:</ion-label>
+                <ion-input type="text" formControlName="CustomerName" readOnly="true"></ion-input>
+              </ion-item>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+
+    <ion-card class="card-standard">
+      <ion-grid class="ion-no-padding">
+        <ion-row class="ion-align-items-center ion-no-padding">
+          <ion-col class="ion-no-padding" size="12" size-md="8" push-md="2">
+
+            <!-- Make -->
+            <div class="input-format">
+              <ion-item color="transparent" lines="none">
+                <ion-label position="stacked">Make:</ion-label>
+                <ion-input type="text" formControlName="MakeName" (ionChange)="toUpper($event)" readOnly="true">
+                </ion-input>
+              </ion-item>
+            </div>
+
+            <!-- Model -->
+            <div class="input-format">
+              <ion-item color="transparent" lines="none">
+                <ion-label position="stacked">Model:</ion-label>
+                <ion-input type="text" formControlName="ModelName" (ionChange)="toUpper($event)" readOnly="true">
+                </ion-input>
+              </ion-item>
+            </div>
+
+
+            <!-- Application -->
+            <div class="input-format">
+              <ion-item color="transparent" lines="none">
+                <ion-label position="stacked" class="required">Application:</ion-label>
+                <ionic-selectable class="ion-text-wrap" formControlName="Application" [items]="bodyTypeData"
+                  itemValueField="Id" itemTextField="Info" [canSearch]="true">
+                </ionic-selectable>
+              </ion-item>
+            </div>
+
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+
+    <ion-card class="card-standard">
+      <ion-toolbar class="transparent"
+        style="background-color: #473f97; border-radius: 6px; margin-top: 5px; margin-bottom: 5px; text-align: left;">
+        <!-- IsLoan -->
+        <ion-checkbox formControlName="IsLoan" [checked]="this.sbtForm.get('IsLoan').value"
+        style="vertical-align: middle; margin-left: 15px; margin-right: 15px;"
+        (ionChange)="LoanChange($event)"></ion-checkbox>
+        <ion-label style="color: white; font-size: 16px; margin-top: 5px; vertical-align: middle;">Required Loan
+        </ion-label>
+      </ion-toolbar>
+
+      <ion-toolbar class="transparent"
+        style="background-color: #473f97; border-radius: 6px; margin-top: 5px; margin-bottom: 5px; text-align: left;">
+        <!-- IsBodyWork -->
+        <ion-checkbox formControlName="IsBodyWork" [checked]="this.sbtForm.get('IsBodyWork').value"
+        style="vertical-align: middle; margin-left: 15px; margin-right: 15px;">
+        </ion-checkbox>
+        <ion-label style="color: white; font-size: 16px; margin-top: 5px; vertical-align: middle;">Required Body Work
+        </ion-label>
+      </ion-toolbar>
+    </ion-card>
+
+    <ion-card class="card-standard">
+      <div class="salesTable">
+        <ion-row class="no-margin-padding">
+          <ion-col class="borderEmpty" size="4">
+
+          </ion-col>
+          <ion-col class="header">
+            <ion-label>Amount</ion-label>
+          </ion-col>
+          <ion-col class="header">
+            <ion-label>Collected</ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col class="header-left" size="4">
+            <ion-label>Sales</ion-label>
+          </ion-col>
+          <ion-col class="cellEnabled">
+            <input currencyMask formControlName="Sales" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " (ngModelChange)="autoCalculate('Sales')"/>
+          </ion-col>
+          <ion-col class="cellDisabled">
+            <input currencyMask formControlName="SalesCollected" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col class="header-left" size="4">
+            <ion-label>Deposit</ion-label>
+          </ion-col>
+          <ion-col class="cellEnabled">
+            <input currencyMask formControlName="Deposit" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " (ngModelChange)="autoCalculate('Deposit')" />
+          </ion-col>
+          <ion-col class="cellDisabled">
+            <input currencyMask formControlName="DepositCollected" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col class="header-left" size="4">
+            <ion-label>Loan</ion-label>
+          </ion-col>
+          <ion-col [ngClass]="(IsLoan) ? 'cellEnabled' : 'cellDisabled'">
+            <input currencyMask formControlName="Loan" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " (ngModelChange)="autoCalculate('Loan')" [readOnly]="!IsLoan" />
+          </ion-col>
+          <ion-col class="cellDisabled">
+            <input currencyMask formControlName="LoanCollected" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col class="header-left" size="4">
+            <ion-label>Balance</ion-label>
+          </ion-col>
+          <ion-col class="cellEnabled">
+            <input currencyMask formControlName="Balance" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " (ngModelChange)="autoCalculate('Balance')" />
+          </ion-col>
+          <ion-col class="cellDisabled">
+            <input currencyMask formControlName="BalanceCollected" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col class="header-left" size="4">
+            <ion-label>Reimburse</ion-label>
+          </ion-col>
+          <ion-col class="cellEnabled">
+            <input currencyMask formControlName="Reimburse" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " (ngModelChange)="autoCalculate('Reimburse')" />
+          </ion-col>
+          <ion-col class="cellDisabled">
+            <input currencyMask formControlName="ReimbursePaid" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } "[readOnly]="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row class="no-margin-padding">
+          <ion-col class="header-left borderbottom" size="4">
+            <ion-label>Outstanding</ion-label>
+          </ion-col>
+          <ion-col class="cellDisabled borderbottom">
+            <input currencyMask formControlName="Outstanding" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+          </ion-col>
+          <ion-col class="cellDisabled borderbottom">
+            <input currencyMask formControlName="OutstandingCollected" [placeholder]="0"
+              [options]="{ thousands: ',', prefix: '', decimal: '.', precision: 2  } " [readOnly]="true" />
+          </ion-col>
+        </ion-row>
+      </div>
+      <ion-label style="font-size: 12px; color: red; padding: 5px; text-align: left;" [hidden]="!sbtForm.get('Outstanding').value">*Outstanding figure has to be
+        zero</ion-label>
+    </ion-card>
+
+    <ion-card class="card-standard" [hidden]="!sbtForm.get('CustomerName').value">
+      <ion-grid class="ion-no-padding">
+        <ion-row class="ion-align-items-center ion-no-padding">
+          <ion-col class="ion-no-padding" size="12" size-md="8" push-md="2">
+            <!-- Quotation -->
+            <div class="input-format">
+              <ion-item color="transparent" lines="none">
+                <ion-label position="stacked">Quotation:</ion-label>
+                <ion-input type="text" formControlName="Quotation" readOnly="true">
+                </ion-input>
+              </ion-item>
+            </div>
+
+            <!-- Remarks -->
+            <div class="input-format" style="height: 80px;">
+              <ion-item color="transparent" lines="none">
+                <ion-label position="stacked">Remarks:</ion-label>
+                <ion-textarea type="string" formControlName="Remarks">
+                </ion-textarea>
+              </ion-item>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+
+    <ion-card formArrayName="SalesOffer">
+      <div *ngFor="let sales of salesForms.controls; let i=index" [formGroupName]='i'>
+        <ion-card class="card-standard">
+          <ion-toolbar>
+            <ion-label slot="start" style="margin-left: 15px;">Offer #{{i+1}}</ion-label>
+            <ion-button color="danger" expand="block" slot="end" (click)="deleteSales(i)" [hidden]="status !== 'new'">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </ion-toolbar>
+
+          <ion-grid class="ion-no-padding">
+            <ion-row class="ion-align-items-center ion-no-padding">
+              <ion-col class="ion-no-padding" size="12" size-md="8" push-md="2">
+                <div class="input-format">
+                  <ion-item color="transparent" lines="none">
+                    <ion-label position="stacked" class="required">Offer Item:</ion-label>
+                    <ion-select style="width: 100%; text-align: left;" formControlName="OfferItem">
+                      <ion-select-option *ngFor="let item of OfferItemData" [value]="item.Id">
+                        {{item.Info | translate}}</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </div>
+
+                <div class="input-format">
+                  <ion-item color="transparent" lines="none">
+                    <ion-label position="stacked" class="required">Quantity:</ion-label>
+                    <ion-input type="number" formControlName="OfferQty">
+                    </ion-input>
+                  </ion-item>
+                </div>
+
+                <div class="input-format" style="height: 80px;">
+                  <ion-item color="transparent" lines="none">
+                    <ion-label position="stacked">Remarks:</ion-label>
+                    <ion-textarea type="string" formControlName="OfferRemarks">
+                    </ion-textarea>
+                  </ion-item>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card>
+      </div>
+
+      <div style="margin: 20px;">
+        <a (click)="addSales()" style="margin-top: 10px;">Add Offers</a>
+      </div>
+    </ion-card>
+  </ion-content>
+
+  <ion-footer style="margin: 0px; padding: 0px;" class="transparent ion-no-border" [hidden]="!showButton">
+    <ion-toolbar style="margin: 0px; padding: 0px;" class="transparent ion-no-border">
+      <ion-grid style="margin: 0px; padding: 0px;">
+        <ion-row style="margin: 0px; padding: 0px;">
+          <ion-col style="margin: 0px; padding: 0px;">
+            <ion-button (click)="salesFunction('UPDATE');" expand="full" style="background-color: #473f97;"
+              [hidden]="isVerified" [disabled]="verified()" class="action-menu-button">
+              UPDATE
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-toolbar>
+  </ion-footer>
+</ion-app>

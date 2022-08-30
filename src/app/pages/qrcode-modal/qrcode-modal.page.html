@@ -1,0 +1,40 @@
+<ion-app style="background-color: white">
+
+  <ion-header class="ion-no-border" style="height: 75px">
+    <ion-toolbar class="transparent" style="padding: 5px 10px; background-color: #473f97;">
+      <ion-back-button mode="ios" style="color: white;" slot="start" defaultHref="/home" (click)="dismissModal(true)">
+      </ion-back-button>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="transparent no-scroll" overflow-scroll="false" >
+    <ion-card style="padding: 10px; text-align: center;">
+      <ion-label style="font-size: 20px" [hidden]="!(item === 'ONHOLD' && dueDate)">Current On Hold Date: {{dueDate | date: 'dd-MM-YYYY'}}</ion-label><br><br>
+      <ion-label style="font-size: 20px" [hidden]="item !== 'ONHOLD'">Days to On Hold:</ion-label>
+      <ion-label style="font-size: 20px" [hidden]="item !== 'POSTPONE'">Current Due Date: {{dueDate | date: 'dd-MM-YYYY'}}</ion-label><br><br>
+      <ion-label style="font-size: 20px" [hidden]="item !== 'POSTPONE'">Days to Postpone:</ion-label>
+      <ion-select [value]="selectedValue" (ionChange)="dateChange($event)" style="margin-top: 15px;"
+        class="action-menu-button">
+        <ion-select-option value="1">1</ion-select-option>
+        <ion-select-option value="2">2</ion-select-option>
+        <ion-select-option value="3">3</ion-select-option>
+        <ion-select-option value="4">4</ion-select-option>
+        <ion-select-option value="5">5</ion-select-option>
+        <ion-select-option value="6">6</ion-select-option>
+        <ion-select-option value="7">7</ion-select-option>
+      </ion-select>
+    </ion-card>
+  </ion-content>
+
+  <ion-footer style="margin: 0px; padding: 0px;" class="transparent ion-no-border">
+    <ion-toolbar style="margin: 0px; padding: 0px;" class="transparent ion-no-border">
+      <ion-button (click)="dismissModal(false);" expand="full" class="action-menu-button" [hidden]="item !== 'ONHOLD'">
+        ON HOLD UNTIL {{extendedDate | date: 'dd-MM-YYYY'}}
+      </ion-button>
+
+      <ion-button (click)="dismissModal(false);" expand="full" class="action-menu-button" [hidden]="item !== 'POSTPONE'">
+        POSTPONE UNTIL {{extendedDate | date: 'dd-MM-YYYY'}}
+      </ion-button>
+    </ion-toolbar>
+  </ion-footer>
+</ion-app>

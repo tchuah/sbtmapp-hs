@@ -1,0 +1,241 @@
+.input-format {
+  background: #f3f3f3;
+  margin: 5px 10px;
+  border-radius: 10px;
+  letter-spacing: 1px;
+  height: 40px;
+  color: white;
+  font-size: 10px;
+
+  ion-item {
+    --min-height: 15px;
+  }
+
+  ion-icon {
+    margin-left: 0px;
+    font-size: medium;
+    color: black;
+  }
+
+  ion-select {
+    font-size: 14px;
+  }
+
+  ion-input {
+    font-size: 10px;
+  }
+
+  ion-datetime {
+    font-size: 14px;
+  }
+
+  ionic-selectable {
+    font-size: 14px;
+    float: right;
+    position: absolute;
+    right: 10px;
+  }
+}
+
+.action-menu-button {
+  font-size: 16px;
+  letter-spacing: 2px;
+  height: 50px;
+  --border-radius: 5px;
+  --background: #596bf4;
+  --color: #FFFFFF;
+}
+
+.required:after {
+  content:" *";
+  color: red;
+}
+
+.required2 {
+  color: red;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.vertical{
+  margin: 0 5%;
+  position: absolute;
+  top: 60%;
+  right: 0px;
+  -ms-transform: translateY(-60%);
+  transform: translateY(-60%);
+}
+
+.vertical2{
+  margin: 0 5%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.vertical3{
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  top: 20%;
+  text-align: center;
+}
+
+.unclickable-area
+{
+    position:relative;
+}
+.unclickable-area:after
+{
+    content: '';
+    position: absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    z-index:1;
+    background: transparent;
+}
+
+.styleDefault {
+  padding: 0;
+  margin: 0;
+  --padding: 0;
+  --margin: 0;
+}
+
+input {
+  background-color: transparent;
+  width: 100%;
+  outline: none;
+  border: 1px solid black;
+  text-align: right !important;
+  padding: 5px;
+  margin: 0;
+  font-size: 14px;
+}
+
+.left-sales-col {
+  text-align: left;
+  font-size: 13px;
+  vertical-align: middle;
+
+  ionic-selectable-cover {
+    height: 24px !important;
+  }
+}
+
+.right-sales-col {
+  text-align: right;
+  font-size: 13px;
+
+  input {
+    font-size: 13px;
+  }
+}
+
+.hr {
+  border-bottom: 1px solid black;
+  margin: 10px 0;
+  width: 100%;
+}
+
+.enterField {
+  background-color: rgba(198,239,206,255);
+}
+
+.icon {
+  font-size: 22px; 
+  margin-right: 10px; 
+  vertical-align: middle; 
+  margin-top: 8px; 
+  text-align: center;
+}
+
+ionic-selectable {
+  background: white;
+  border: black 1px solid;
+  margin-top: 5px;
+  padding-left: 10px;
+  font-size: 14px;
+}
+
+.unclickable-area
+{
+  position:relative;
+}
+.unclickable-area:after
+{
+  content: '';
+  position: absolute;
+  left:0;
+  right:0;
+  top:0;
+  bottom:0;
+  z-index:1;
+}
+
+.card-standard {
+  padding: 4px 15px 4px;
+}
+
+.salesTable { 
+  padding: 4px 2px 4px;
+  color: #808080;
+
+  ion-col {
+    border-top: 1px solid ;
+    border-right: 1px solid ;
+    border-color: #bfbfbf;
+    background-color: #f2f2f2;
+    margin: 0px;
+    padding: 5px 8px;
+  }
+
+  .cellEnabled {
+    background-color: white;
+    color: black;
+  }
+
+  .header {
+    text-align: center;
+    width: 100%;
+  }
+
+  .header-left {
+    text-align: left;
+    border-left: 1px solid ;
+    border-color:#bfbfbf;
+  }
+
+  .borderbottom {
+    border-bottom: 1px solid ;
+    border-color:#bfbfbf;
+  }
+
+  .borderEmpty{
+    background-color: transparent; 
+    border-top: 0px solid;
+    border-bottom: 0px solid;
+    border-left: 0px solid;
+    border-right: 1px solid;
+    border-color:  #bfbfbf;
+  }
+
+  input {
+    background-color: transparent;
+    width: 100%;
+    height: 20px !important;
+    outline: none;
+    border: none;
+    text-align: right !important;
+    padding: 0px;
+    margin: 0;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,50 @@
+<ion-app style="background-color: #f3f3f3;">
+  <ion-header class="ion-no-border" style="padding: 5px 10px; background-color: #473f97;">
+    <ion-toolbar class="transparent">
+      <ion-back-button mode="ios" style="color: white;" slot="start" defaultHref="/stock">
+      </ion-back-button>
+      <ion-title style="color: white; font-size: 16px;" mode="ios">Stock History</ion-title>
+      <ion-icon slot="end" [hidden]="!showSummary" name="chevron-down-outline" (click)="showSummary = !showSummary"
+      style="color: white; font-size: 28px; margin-right: 10px;"></ion-icon>
+    <ion-icon slot="end" [hidden]="showSummary" name="chevron-up-outline" (click)="showSummary = !showSummary"
+      style="color: white; font-size: 28px; margin-right: 10px;"></ion-icon>
+    </ion-toolbar>
+
+    <div *ngIf="stockJson">
+      <ion-card style="text-align: left;" [hidden]="!showSummary">
+        <ion-card-header style="text-align: left;  padding: 0px; --background: rgb(181, 181, 181);">
+          <ion-icon name="information-circle-outline" style="margin: 10px; font-size: 25px; vertical-align: middle; color: black;"></ion-icon>
+          <ion-label style="vertical-align: middle; color: black;">Vehicle Summary</ion-label>
+        </ion-card-header>
+        <p style="margin-left: 10px;"> Make:  {{stockJson[0].MakeName}}</p>
+        <p style="margin-left: 10px;"> Model:  {{stockJson[0].ModelName}}</p>
+        <p style="margin-left: 10px;"> Chassis Number:  {{stockJson[0].ChassisNumber}}</p>
+      </ion-card>
+    </div>
+  </ion-header>
+
+  <ion-content class="transparent" style="text-align: center;">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content pullingIcon="chevron-down-circle-outline" refreshingSpinner="circles" style="color: white;"
+        [refreshingText]="'Loading' | translate">
+      </ion-refresher-content>
+    </ion-refresher>
+
+    <ion-label [hidden]="!noData" class="vertical" style="margin-top: 38px; font-size: 16px; z-index: 12;">No History Found</ion-label>
+    <ion-card *ngFor="let item of stockHistoryJson" style="text-align: left;">
+      <ion-card-header color="warning">
+          <ion-label>ACTION: {{global.getstockActionStatusInfo(item.Action)}}</ion-label>
+          <ion-label style="float: right;">{{item.CreatedOn | date: 'dd-MM-YYYY'}}</ion-label>
+      </ion-card-header>
+
+      <!-- <div style="padding: 10px;">
+        <p>{{item.Source}}</p>
+        <p>{{item.SourceInfo}}</p>
+      </div> -->
+
+      <ion-card-header style="padding: 10px; --background: rgb(181, 181, 181); color: black; text-align: center;">
+        <ion-label>STOCK STATUS: {{global.getstockStatusInfo(item.StockStatus)}}</ion-label>
+      </ion-card-header>
+    </ion-card>
+  </ion-content>
+</ion-app>

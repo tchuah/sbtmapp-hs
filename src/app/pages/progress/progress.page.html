@@ -1,0 +1,68 @@
+<ion-app style="background-color: #f3f3f3;">
+
+  <ion-header class="ion-no-border" style="height: 75px">
+    <ion-toolbar class="transparent" style="padding: 5px 10px; background-color: #473f97;">
+      <ion-back-button mode="ios" style="color: white;" slot="start" defaultHref="/sales2">
+      </ion-back-button>
+      <ion-title style="color: white; font-size: 16px;" mode="ios">Sales Progress</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+
+  <ion-content class="transparent">
+    <ion-card style="text-align: center; padding: 15px;" *ngIf="noData">
+      No Data
+    </ion-card>
+    <ion-card *ngFor="let data of progressJson; let i = index" style=" background-color: #ececf3; color: black">
+      <ion-card-header color="warning" style="padding: 5px 10px;" (click)="data.showInfo = !data.showInfo">
+        <ion-grid class="no-margin-padding">
+          <ion-row class="no-margin-padding">
+            <ion-col class="no-margin-padding" size="8">
+              <div>
+                <ion-label style="font-size: 12px; text-overflow: ellipsis">{{data.WorkflowSeq}}. {{data.WorkflowInfo}}</ion-label><br>
+                <ion-label style="font-size: 12px; text-overflow: ellipsis">{{data.Progress}} %</ion-label>
+              </div>
+            </ion-col>
+            <ion-col class="no-margin-padding" size="4" style="text-align: right;">
+              <ion-icon style="font-size: 18px; text-align: right;" [name]="(data.showInfo)? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon><br>
+              <ion-label style="font-size: 12px; text-overflow: ellipsis; text-align: right;">{{data.CompleteTask}}/{{data.TotalTask}}</ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-header>
+
+      <ion-grid [hidden]="!data.showInfo" style="padding: 0px;">
+        <ion-card *ngFor="let data2 of progressJson[i].ProgressList"  (click)="util.goto('progress-detail', 'task-detail',data2.Id)">
+          <ion-card-header color="tertiary" style="padding: 5px 10px;">
+            <ion-label style="font-size: 10px; vertical-align: middle;">{{data2.WorkflowStageItemSeq}}. {{data2.WorkflowStageItemInfo}}
+            </ion-label>
+            <ion-icon name="checkmark-circle-outline" [hidden]="!data2.IsComplete"
+            style="color: rgb(4, 206, 4); font-size: 20px; float: right; text-align: right; vertical-align: middle;"></ion-icon>
+          </ion-card-header>
+          <ion-grid style="padding: 3px;"> 
+            <ion-row>
+              <ion-col class="no-margin-padding">
+                <ion-label style="font-size: 10px;">Status: {{global.getTaskStatusInfo(data2.Status)}}</ion-label>
+              </ion-col>
+            </ion-row>
+            <ion-row [hidden]="!data2.DueDate">
+              <ion-col class="no-margin-padding">
+                <ion-label style="font-size: 10px; color: red;">Due Date: {{data2.DueDate | date:'dd-MM-YYYY'}}</ion-label>
+              </ion-col>
+            </ion-row>
+            <ion-row [hidden]="!data2.OnHoldUntil || data2.DueDate">
+              <ion-col class="no-margin-padding">
+                <ion-label style="font-size: 10px; color: red;">On Hold Until: {{data2.OnHoldUntil | date:'dd-MM-YYYY'}}</ion-label>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="no-margin-padding">
+                <ion-label style="font-size: 10px;">Assign To: {{data2.WorkflowStageItemAssignName}}</ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card>
+      </ion-grid>
+    </ion-card>
+  </ion-content>
+</ion-app>

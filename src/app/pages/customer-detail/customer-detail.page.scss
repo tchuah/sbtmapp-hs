@@ -1,0 +1,31 @@
+
+.input-format {
+  background: #f3f3f3;
+  margin-top: 5px;
+  border-radius: 10px;
+  letter-spacing: 1px;
+  height: 52px;
+  color: white;
+
+  ion-icon {
+    margin-left: 0px;
+    font-size: medium;
+    color: black;
+  }
+
+  ion-select {
+    font-size: 12px;
+  }
+
+  ion-input {
+    font-size: 12px;
+  }
+
+  ion-textarea {
+    font-size: 12px;
+  }
+
+  ion-datetime {
+    font-size: 12px;
+  }
+}

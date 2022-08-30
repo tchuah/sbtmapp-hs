@@ -1,0 +1,222 @@
+<ion-app style="background-color: #f3f3f3;">
+  <ion-header class="ion-no-border" style="padding: 5px 10px; background-color: #473f97;">
+    <ion-toolbar class="transparent">
+      <ion-menu-button slot="start" style="color: white;"></ion-menu-button>
+      <ion-title style="color: white;" mode="ios">Sales Analytics</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="transparent" (click)="refresh()">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content pullingIcon="chevron-down-circle-outline" refreshingSpinner="circles" style="color: white;"
+        [refreshingText]="'Loading' | translate">
+      </ion-refresher-content>
+    </ion-refresher>
+
+    <div style="padding: 3px 10px;" *ngIf="dataJson">
+      <ion-card>
+        <ion-card-header style="text-align: center;">Current Scenario on Master Quotation</ion-card-header>
+        <!-- <ion-card-header style="text-align: center;">{{global.BranchName}}</ion-card-header> -->
+        <ion-card-content>
+          <canvas #doughnutCanvas style="position: relative; height:20vh; width:40vw"></canvas>
+          <ion-button expand="full" style="margin-top: 15px; width: 100%; --background: rgba(75, 192, 192, 1);"
+            [hidden]="selectedStatus !== 'Released'" (click)="util.goto('sales-scenario', 'month-scenario', '')">
+            <ion-icon name="bar-chart-outline" style="font-size: 18px; margin-right: 10px; vertical-align: middle;">
+            </ion-icon>
+            <ion-label style="font-size: 13px; vertical-align: middle;">Released Sales</ion-label>
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+  <!-- Default -->
+    <ion-card *ngFor="let data of dataJsonBranch" [hidden]="selectedStatus !== ''">
+      <ion-card-header color="warning" style="padding: 3px;">
+        <ion-label>{{data.BranchName}}</ion-label>
+      </ion-card-header>
+      <ion-grid class="no-margin-padding statusCard">
+        <ion-row class="no-margin-padding" style="text-align: center; ">
+          <ion-col style="background-color: rgba(255, 255, 255, 0.2);">
+            <ion-toolbar style="border-left: 0px; --background: rgba(215, 215, 215, 0.5);">
+              <ion-label>ORDER</ion-label>
+            </ion-toolbar>
+            <ion-label>{{data.BranchForecastUnit}}</ion-label>
+          </ion-col>
+          <ion-col style="background-color: rgba(75, 192, 192, 0.2);">
+            <ion-toolbar style="--background: rgba(75, 192, 192, 0.5);">
+              <ion-label>RELEASED</ion-label>
+            </ion-toolbar>
+            <ion-label>{{data.BranchReleasedUnit}}</ion-label>
+          </ion-col>
+          <ion-col style="background-color: rgba(255, 206, 86, 0.2);">
+            <ion-toolbar style="--background: rgba(255, 206, 86, 0.5);">
+              <ion-label>PENDING</ion-label>
+            </ion-toolbar>
+            <ion-label>{{data.BranchPendingUnit}}</ion-label>
+          </ion-col>
+          <ion-col style="background-color: rgba(128, 128, 128, 0.2);">
+            <ion-toolbar style="--background: rgba(128, 128, 128, 0.5);">
+              <ion-label>CLOSED</ion-label>
+            </ion-toolbar>
+            <ion-label>{{data.BranchClosedUnit}}</ion-label>
+          </ion-col>
+          <ion-col style="background-color: rgba(220, 20, 60, 0.2);">
+            <ion-toolbar style="border-right: 0px; --background: rgba(220, 20, 60, 0.2);">
+              <ion-label>CANCEL</ion-label>
+            </ion-toolbar>
+            <ion-label>{{data.BranchCanceledUnit}}</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+
+    <!-- Released -->
+    <div *ngFor="let data of dataJsonBranch" [hidden]="selectedStatus !== 'Released'">
+      <ion-card *ngIf="data.BranchReleasedUnit !== 0"> 
+        <ion-card-header color="warning" style="padding: 3px;" >
+          <ion-label>{{data.BranchName}}</ion-label>
+        </ion-card-header>
+        <ion-grid class="no-margin-padding" [hidden]="!this.chartLabel.includes(selectedStatus)">
+          <ion-row class="no-margin-padding" style="text-align: center; ">
+            <ion-col [hidden]="selectedStatus !== ''">
+              <ion-toolbar style="border-left: 0px;">
+                <ion-label>ORDER</ion-label>
+              </ion-toolbar>
+              <ion-label>{{data.BranchForecastUnit}}</ion-label>
+            </ion-col>
+        
+            <ion-col size="3" class="no-margin-padding" style="background-color: rgba(75, 192, 192, 0.5);" [hidden]="selectedStatus !== 'Released'">
+              <ion-label class="vertical2" style="color: black; font-size: 12px;">RELEASED</ion-label>
+            </ion-col>
+            <ion-col size="9" class="no-margin-padding" style="text-align: left; background-color: rgba(75, 192, 192, 0.2); margin: 0 auto" [hidden]="selectedStatus !== 'Released'">
+              <ion-row class="no-margin-padding">
+                <ion-col size="3" style="margin: 0px; padding: 2px 5px; font-size: 12px;">UNIT</ion-col>
+                <ion-col size="1" style="margin: 0px; padding: 2px 5px; font-size: 12px;">:</ion-col>
+                <ion-col size="4" style="margin: 0px; padding: 2px 5px; font-size: 12px;">{{data.BranchReleasedUnit}}</ion-col>
+              </ion-row>
+              <ion-row class="no-margin-padding">
+                <ion-col size="3" style="margin: 0px; padding: 2px 5px; font-size: 12px;">SALES</ion-col>
+                <ion-col size="1" style="margin: 0px; padding: 2px 5px; font-size: 12px;">:</ion-col>
+                <ion-col size="4" style="margin: 0px; padding: 2px 5px; font-size: 12px;">{{data.BranchReleasedSales | number}}</ion-col>
+              </ion-row >
+              <ion-icon name="chevron-forward-outline" class="vertical" style="font-size: 25px;"
+                (click)="util.goto('sales-scenario','branch-sales', data.Branch, 1)"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </div>
+
+    <!-- Pending -->
+    <div *ngFor="let data of dataJsonBranch" [hidden]="selectedStatus !== 'Pending'">
+      <ion-card *ngIf="data.BranchPendingUnit !== 0"> 
+        <ion-card-header color="warning" style="padding: 3px;" >
+          <ion-label>{{data.BranchName}}</ion-label>
+        </ion-card-header>
+        <ion-grid class="no-margin-padding" [hidden]="!this.chartLabel.includes(selectedStatus)">
+          <ion-row class="no-margin-padding" style="text-align: center; ">
+            <ion-col [hidden]="selectedStatus !== ''">
+              <ion-toolbar style="border-left: 0px;">
+                <ion-label>ORDER</ion-label>
+              </ion-toolbar>
+              <ion-label>{{data.BranchForecastUnit}}</ion-label>
+            </ion-col>
+              
+            <ion-col size="3" class="no-margin-padding" style="background-color: rgba(255, 206, 86, 0.5);" [hidden]="selectedStatus !== 'Pending'">
+              <ion-label class="vertical2" style="color: black; font-size: 12px;">PENDING</ion-label>
+            </ion-col>
+            <ion-col size="9" class="no-margin-padding" style="text-align: left; background-color: rgba(255, 206, 86, 0.2); margin: 0 auto" [hidden]="selectedStatus !== 'Pending'">
+              <ion-row class="no-margin-padding">
+                <ion-col size="3" style="margin: 0px; padding: 2px 5px; font-size: 12px;">UNIT</ion-col>
+                <ion-col size="1" style="margin: 0px; padding: 2px 5px; font-size: 12px;">:</ion-col>
+                <ion-col size="4" style="margin: 0px; padding: 2px 5px; font-size: 12px;">{{data.BranchPendingUnit}}</ion-col>
+              </ion-row>
+              <ion-row class="no-margin-padding">
+                <ion-col size="3" style="margin: 0px; padding: 2px 5px; font-size: 12px;">SALES</ion-col>
+                <ion-col size="1" style="margin: 0px; padding: 2px 5px; font-size: 12px;">:</ion-col>
+                <ion-col size="4" style="margin: 0px; padding: 2px 5px; font-size: 12px;">{{data.BranchPendingSales | number}}</ion-col>
+              </ion-row >
+              <ion-icon name="chevron-forward-outline" class="vertical" style="font-size: 25px;"
+                (click)="util.goto('sales-scenario','branch-sales', data.Branch, 0)"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </div>
+
+    <!-- Closed -->
+    <div *ngFor="let data of dataJsonBranch" [hidden]="selectedStatus !== 'Closed'">
+      <ion-card *ngIf="data.BranchClosedUnit !== 0"> 
+        <ion-card-header color="warning" style="padding: 3px;" >
+          <ion-label>{{data.BranchName}}</ion-label>
+        </ion-card-header>
+        <ion-grid class="no-margin-padding" [hidden]="!this.chartLabel.includes(selectedStatus)">
+          <ion-row class="no-margin-padding" style="text-align: center; ">
+            <ion-col [hidden]="selectedStatus !== ''">
+              <ion-toolbar style="border-left: 0px;">
+                <ion-label>ORDER</ion-label>
+              </ion-toolbar>
+              <ion-label>{{data.BranchForecastUnit}}</ion-label>
+            </ion-col>
+
+            <ion-col size="3" class="no-margin-padding" style="background-color: rgba(128, 128, 128, 0.5);" [hidden]="selectedStatus !== 'Closed'">
+              <ion-label class="vertical2" style="color: black; font-size: 12px;">CLOSED</ion-label>
+            </ion-col>
+            <ion-col size="9" class="no-margin-padding" style="text-align: left; background-color: rgba(128, 128, 128, 0.2); margin: 0 auto" [hidden]="selectedStatus !== 'Closed'">
+              <ion-row class="no-margin-padding">
+                <ion-col size="3" style="margin: 0px; padding: 2px 5px; font-size: 12px;">UNIT</ion-col>
+                <ion-col size="1" style="margin: 0px; padding: 2px 5px; font-size: 12px;">:</ion-col>
+                <ion-col size="4" style="margin: 0px; padding: 2px 5px; font-size: 12px;">{{data.BranchClosedUnit}}</ion-col>
+              </ion-row>
+              <ion-row class="no-margin-padding">
+                <ion-col size="3" style="margin: 0px; padding: 2px 5px; font-size: 12px;">SALES</ion-col>
+                <ion-col size="1" style="margin: 0px; padding: 2px 5px; font-size: 12px;">:</ion-col>
+                <ion-col size="4" style="margin: 0px; padding: 2px 5px; font-size: 12px;">{{data.BranchClosedSales | number}}</ion-col>
+              </ion-row >
+              <ion-icon name="chevron-forward-outline" class="vertical" style="font-size: 25px;"
+                (click)="util.goto('sales-scenario','branch-sales', data.Branch, 8)"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </div>
+
+    <!-- Canceled -->
+    <div *ngFor="let data of dataJsonBranch" [hidden]="selectedStatus !== 'Canceled'">
+      <ion-card *ngIf="data.BranchCanceledUnit !== 0"> 
+        <ion-card-header color="warning" style="padding: 3px;" >
+          <ion-label>{{data.BranchName}}</ion-label>
+        </ion-card-header>
+        <ion-grid class="no-margin-padding" [hidden]="!this.chartLabel.includes(selectedStatus)">
+          <ion-row class="no-margin-padding" style="text-align: center; ">
+            <ion-col [hidden]="selectedStatus !== ''">
+              <ion-toolbar style="border-left: 0px;">
+                <ion-label>ORDER</ion-label>
+              </ion-toolbar>
+              <ion-label>{{data.BranchForecastUnit}}</ion-label>
+            </ion-col>
+
+            <ion-col size="3" class="no-margin-padding" style="background-color: rgba(220, 20, 60, 0.5);" [hidden]="selectedStatus !== 'Canceled'">
+              <ion-label class="vertical2" style="color: black; font-size: 12px;">CANCELED</ion-label>
+            </ion-col>
+            <ion-col size="9" class="no-margin-padding" style="text-align: left; background-color: rgba(220, 20, 60, 0.2); margin: 0 auto" [hidden]="selectedStatus !== 'Canceled'">
+              <ion-row class="no-margin-padding">
+                <ion-col size="3" style="margin: 0px; padding: 2px 5px; font-size: 12px;">UNIT</ion-col>
+                <ion-col size="1" style="margin: 0px; padding: 2px 5px; font-size: 12px;">:</ion-col>
+                <ion-col size="4" style="margin: 0px; padding: 2px 5px; font-size: 12px;">{{data.BranchCanceledUnit}}</ion-col>
+              </ion-row>
+              <ion-row class="no-margin-padding">
+                <ion-col size="3" style="margin: 0px; padding: 2px 5px; font-size: 12px;">SALES</ion-col>
+                <ion-col size="1" style="margin: 0px; padding: 2px 5px; font-size: 12px;">:</ion-col>
+                <ion-col size="4" style="margin: 0px; padding: 2px 5px; font-size: 12px;">{{data.BranchCanceledSales | number}}</ion-col>
+              </ion-row >
+              <ion-icon name="chevron-forward-outline" class="vertical" style="font-size: 25px;"
+                (click)="util.goto('sales-scenario','branch-sales', data.Branch, 9)"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </div>
+    
+  </ion-content>
+</ion-app>

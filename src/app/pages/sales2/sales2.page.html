@@ -1,0 +1,189 @@
+<ion-app style="background-color: #f3f3f3;">
+
+  <ion-header class="ion-no-border" style="height: 75px">
+    <ion-toolbar class="transparent" style="padding: 5px 10px; background-color: #473f97;">
+      <ion-back-button mode="ios" style="color: white;" slot="start" defaultHref="/home">
+      </ion-back-button>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="transparent" style="text-align: center;">
+    <div *ngIf="salesJson2">
+      <ion-card style="text-align: center; padding: 15px;" *ngIf="salesJson2.length === 0">
+        No Data
+      </ion-card>
+
+      <div style="padding: 0px; margin: 0px; margin-bottom: 10px; background-color: #ececf3; color: black; padding-bottom: 2px;"
+        *ngFor="let data of salesJson2; trackBy: trackItem">
+
+        <ion-card style="padding: 0px; margin: 5px; background-color: rgb(233, 229, 229); color: black;"
+          *ngFor="let dt1 of data.SalesPerson; trackBy: trackItem">
+          <ion-card-header color="warning" style="padding: 10px; text-align: left;">
+            <ion-label style="color: black; vertical-align: center;">{{dt1.SalesPersonName}}</ion-label>
+            <ion-icon (click)="dt1.showInfo = !dt1.showInfo" style="font-size: 20px; color: black; vertical-align: center; position: absolute; right: 10px;" [name]="(!dt1.showInfo)? 'chevron-down-outline' : 'chevron-up-outline'"></ion-icon>
+          </ion-card-header>
+          <ion-card style="text-align: center;">
+            <ion-grid>
+              <ion-row>
+                <ion-col size="3">
+                    <ion-label style="font-size: 16px; font-weight: bold;">{{dt1.InHand}}</ion-label><br>
+                    <ion-label style="font-size: 12px;">Sales</ion-label><br>
+                    <ion-label style="font-size: 12px;">In Hand</ion-label><br>
+                </ion-col>
+                <ion-col size="3">
+                    <ion-label style="font-size: 16px; font-weight: bold;">{{dt1.NotAssign}}</ion-label><br>
+                    <ion-label style="font-size: 12px;">Stock Not </ion-label><br>
+                    <ion-label style="font-size: 12px;">Allocated</ion-label><br>
+                </ion-col>
+                <ion-col size="3">
+                    <ion-label style="font-size: 16px; font-weight: bold;">{{dt1.NotClose}}</ion-label><br>
+                    <ion-label style="font-size: 12px;">Balance</ion-label><br>
+                    <ion-label style="font-size: 12px;">Not Settle</ion-label><br>
+                </ion-col>
+                <ion-col size="3">
+                    <ion-label style="font-size: 16px; font-weight: bold;">{{dt1.OverDue}}</ion-label><br>
+                    <ion-label style="font-size: 12px;">Task</ion-label><br>
+                    <ion-label style="font-size: 12px;">Overdue</ion-label><br>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card>
+          
+          <ion-card *ngFor="let dt of dt1.Sales; trackBy: trackItem" [hidden]="!dt1.showInfo">
+            <ion-grid class="colorBackground">
+              <ion-row>
+                <ion-col size="10" style="text-align: left;">{{dt.CustomerName}}</ion-col>
+                <ion-col size="2" style="text-align: right; position: absolute; margin-left: 80%;">
+                  <ion-icon style="font-size: 23px;"
+                    [name]="(dt.showInfo)? 'chevron-up-outline' : 'chevron-down-outline'"
+                    (click)="dt.showInfo = !dt.showInfo"></ion-icon>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col style="text-align: left;" size="8">{{dt.MakeName}}/{{dt.ModelName}}</ion-col>
+                <ion-col size="4"
+                  style="font-size: 20px; text-align: right; font-weight: 700; position: absolute; margin-left: 62%;">
+                  {{dt.Progress}}%</ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col style="text-align: left;" size="8">{{dt.ChassisNumber}}</ion-col>
+                <ion-col size="4" style="text-align: right;">{{dt.Date | date:'dd-MM-YYYY'}}</ion-col>
+              </ion-row>
+            </ion-grid>
+            <br [hidden]="!dt.showInfo">
+
+            <!-- Amount and Collected -->
+            <div [hidden]="!dt.showInfo">
+              <ion-grid class="ion-no-padding">
+                <ion-row class="ion-align-items-center ion-no-padding">
+                  <ion-col class="ion-no-padding" size="12" size-md="8" push-md="2">
+
+                    <div class="salesTable">
+                      <ion-row>
+                        <ion-col size="4" class="header">
+                        </ion-col>
+                        <ion-col size="4" class="header">
+                          Amount
+                        </ion-col>
+                        <ion-col size="4" class="header">
+                          Collected
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="4" class="header">
+                          Sales
+                        </ion-col>
+                        <ion-col size="4" class="cellDisabled">
+                          <ion-label type="number" readOnly="true"> {{dt.Sales | number : '1.2-2'}}</ion-label>
+                        </ion-col>
+                        <ion-col size="4" class="cellDisabled">
+                          <ion-label type="number" readOnly="true"> {{dt.SalesCollected | number : '1.2-2'}}
+                          </ion-label>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="4" class="header">
+                          Deposit
+                        </ion-col>
+                        <ion-col size="4" class="cellDisabled">
+                          <ion-label type="number" readOnly="true"> {{dt.Deposit | number : '1.2-2'}}</ion-label>
+                        </ion-col>
+                        <ion-col size="4" class="cellDisabled">
+                          <ion-label type="number" readOnly="true">
+                            {{dt.DepositCollected | number : '1.2-2'}}</ion-label>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="4" class="header">
+                          Loan
+                        </ion-col>
+                        <ion-col size="4" class="cellDisabled">
+                          <ion-label type="number" readOnly="true"> {{dt.Loan | number : '1.2-2'}}</ion-label>
+                        </ion-col>
+                        <ion-col size="4" class="cellDisabled">
+                          <ion-label type="number" readOnly="true"> {{dt.LoanCollected | number : '1.2-2'}}
+                          </ion-label>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="4" class="header">
+                          Balance
+                        </ion-col>
+                        <ion-col size="4" class="cellDisabled">
+                          <ion-label type="number" readOnly="true"> {{dt.Balance | number : '1.2-2'}}</ion-label>
+                        </ion-col>
+                        <ion-col size="4" class="cellDisabled">
+                          <ion-label type="number" readOnly="true"> {{dt.BalanceCollected | number : '1.2-2'}}
+                          </ion-label>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="4" class="header">
+                          Reimburse
+                        </ion-col>
+                        <ion-col size="4" class="cellDisabled">
+                          <ion-label type="number" readOnly="true"> {{dt.Reimburse | number : '1.2-2'}}</ion-label>
+                        </ion-col>
+                        <ion-col size="4" class="cellDisabled">
+                          <ion-label type="number" readOnly="true"> {{dt.ReimbursePaid | number : '1.2-2'}}
+                          </ion-label>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="4" class="header">
+                          Outstanding
+                        </ion-col>
+                        <ion-col size="4" class="cellDisabled">
+                          <ion-label type="number" readOnly="true"> {{dt.Outstanding | number : '1.2-2'}}</ion-label>
+                        </ion-col>
+                        <ion-col size="4" class="cellDisabled">
+                          <ion-label type="number" readOnly="true"> {{dt.OutstandingCollected | number : '1.2-2'}}
+                          </ion-label>
+                        </ion-col>
+                      </ion-row>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+
+              <ion-row>
+                <ion-col>
+                  <ion-button class="colorBackground" expand="full" fill="clear"
+                    (click)="util.goto('home', 'sales-detail', dt.Id)">
+                    FULL INFO
+                  </ion-button>
+                </ion-col>
+                <ion-col>
+                  <ion-button class="colorBackground" expand="full" fill="clear"
+                    (click)="util.goto('home', 'progress', dt.Id)">
+                    TASK PROGRESS
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </div>
+          </ion-card>
+        </ion-card>
+      </div>
+    </div>
+  </ion-content>
+</ion-app>

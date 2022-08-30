@@ -1,0 +1,111 @@
+.vertical{
+  margin: 0 5%;
+  position: absolute;
+  top: 40%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  width: 90%;
+}
+
+.action-menu-button {
+  font-size: 16px;
+  letter-spacing: 2px;
+  height: 50px;
+  --border-radius: 5px;
+  --background: #596bf4;
+  --color: #FFFFFF;
+}
+
+.nowrap{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.dashboard {
+  background-color: rgba(191,191,191,255);
+  color: #8e8e8f;
+  padding: 10px; 
+  margin: 0px;
+
+  p {
+    margin: 10px 0 0 0;
+  }
+}
+
+.dashboard-selected {
+  background-color: white;
+  color: black;
+  padding: 10px; 
+  margin: 0px;
+
+  p {
+    margin: 10px 0 0 0;
+  }
+}
+
+ion-checkbox.checkbox-disabled {
+  opacity : 1;
+}
+
+.task-overdue {
+  color: red;
+  --color: red;
+}
+
+.task-isActive {
+  color: black;
+  --color: black;
+}
+
+.task-inActive {
+  color: #919192;
+  --color: #919192;
+  --background: #dcdcdc;
+}
+
+.iconCircle-complete{
+  margin-right: 15px; 
+  vertical-align: middle; 
+  font-size: 28px;
+  color: rgb(1, 148, 1);
+}
+
+.iconCircle {
+  margin-right: 15px; 
+  vertical-align: middle; 
+  font-size: 28px;
+  color: black;
+}
+
+.colorBackground {
+  background-color: rgb(255,235,156);
+  color: rgb(156,101,0);
+}
+
+.salesTable {
+  text-align: center;
+
+  ion-col {
+    border: black 1px solid;
+    padding: 5px;
+  }
+
+  ion-row {
+    margin: 0 10px;
+  }
+
+  .cellDisabled {
+    background-color: rgb(197, 197, 197);
+    --background : rgb(197, 197, 197);
+  }
+
+  .cellEnabled {
+    background-color: rgb(255, 255, 104);
+    --background: rgb(255, 255, 104);
+  }
+
+  .header {
+    padding: 10px;
+  }
+}
